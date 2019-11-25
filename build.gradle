@@ -1,0 +1,41 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.1.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+	id "com.cinnober.gradle.semver-git" version "2.5.0"
+}
+
+group = 'com.github.chaitriplez'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+bootJar.enabled = false
+jar.enabled = true
+
+test {
+	useJUnitPlatform()
+}
+
+task copyDependencies(type: Copy) {
+	from configurations.runtimeClasspath
+	include '*.jar'
+	into "${buildDir}/dependencies"
+}
+
+task initialDependencies {
+	doLast {
+		for(file in configurations.testRuntimeClasspath) {
+			println "File: ${file.name} ${file.size()/1000} kB"
+		}
+	}
+}

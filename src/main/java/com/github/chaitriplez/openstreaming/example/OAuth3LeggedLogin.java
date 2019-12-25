@@ -1,6 +1,6 @@
 package com.github.chaitriplez.openstreaming.example;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.chaitriplez.openstreaming.api.AccessToken3LeggedRequest;
 import com.github.chaitriplez.openstreaming.api.AccessTokenResponse;
 import com.github.chaitriplez.openstreaming.api.Settrade3LeggedLoginAPI;
@@ -21,7 +21,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class OAuth3LeggedLogin {
   public static void main(String[] args) throws Exception {
 
-    if(args.length != 1) {
+    if (args.length != 1) {
       log.info("Usage: java {} {}", OAuth3LeggedLogin.class.getName(), "config.file");
       System.exit(-1);
     }
@@ -89,10 +89,10 @@ public class OAuth3LeggedLogin {
                       .build())
               .build()
               .create(SettradeUserAPI.class);
-      Call<ObjectNode> call = userAPI.getUserInfo(BROKER_ID);
+      Call<JsonNode> call = userAPI.getUserInfo(BROKER_ID);
       log.info("Request Info: {}", call.request());
 
-      Response<ObjectNode> result = call.execute();
+      Response<JsonNode> result = call.execute();
       if (result.isSuccessful()) {
         log.info("User Info: {}", result.body());
       } else {

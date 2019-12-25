@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
 @ConfigurationProperties("openstreaming.three-legged")
-public class ThreeLeggedProperties {
+public class ThreeLeggedLoginProperties {
   private String loginHost;
   private String apiKey;
   private String apiSecret;

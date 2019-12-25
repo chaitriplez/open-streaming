@@ -1,5 +1,6 @@
 package com.github.chaitriplez.openstreaming.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,5 +17,5 @@ public class ErrorResponse {
   String message;
 
   @Singular("additionalInfo")
-  Map<String, String> additionalInfo;
+  Map<String, JsonNode> additionalInfo;
 }

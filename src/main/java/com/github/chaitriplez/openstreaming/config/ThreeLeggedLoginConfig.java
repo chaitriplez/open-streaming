@@ -1,5 +1,6 @@
 package com.github.chaitriplez.openstreaming.config;
 
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.github.chaitriplez.openstreaming.api.AccessToken3LeggedRequest;
 import com.github.chaitriplez.openstreaming.api.AccessTokenResponse;
 import com.github.chaitriplez.openstreaming.api.ErrorResponse;
@@ -30,12 +31,12 @@ import retrofit2.Response;
 @Setter
 @RestController
 @ConditionalOnProperty(prefix = "openstreaming", name = "login-type", havingValue = "THREE_LEGGED")
-@EnableConfigurationProperties(ThreeLeggedProperties.class)
+@EnableConfigurationProperties(ThreeLeggedLoginProperties.class)
 @Configuration
 public class ThreeLeggedLoginConfig {
 
   @Autowired private Settrade3LeggedLoginAPI loginAPI;
-  @Autowired private ThreeLeggedProperties threeLeggedProperties;
+  @Autowired private ThreeLeggedLoginProperties loginProp;
   @Autowired private AccessTokenSupplier accessTokenSupplier;
   @Autowired private OSUserInfo userInfo;
 
@@ -43,10 +44,10 @@ public class ThreeLeggedLoginConfig {
   public void init() {
     String loginUrl =
         Settrade3LeggedLoginAPI.loginUrl(
-            threeLeggedProperties.getLoginHost(),
-            threeLeggedProperties.getApiKey(),
-            threeLeggedProperties.getRedirectUrl(),
-            threeLeggedProperties.getScope());
+            loginProp.getLoginHost(),
+            loginProp.getApiKey(),
+            loginProp.getRedirectUrl(),
+            loginProp.getScope());
     log.info("Login URL: {}", loginUrl);
   }
 
@@ -60,7 +61,7 @@ public class ThreeLeggedLoginConfig {
       params = {"code"})
   public ResponseEntity<?> loginWithAuthCode(@RequestParam("code") String code) throws IOException {
     log.info("Start login with authorization code...");
-    if(userInfo.isLogin()) {
+    if (userInfo.isLogin()) {
       ErrorResponse error =
           ErrorResponse.builder()
               .code(OpenStreamingConstants.LOGIN_ERROR_CODE)
@@ -71,41 +72,41 @@ public class ThreeLeggedLoginConfig {
     }
     AccessToken3LeggedRequest tokenReq =
         AccessToken3LeggedRequest.builder()
-            .client_id(threeLeggedProperties.getApiKey())
+            .client_id(loginProp.getApiKey())
             .code(code)
-            .redirect_uri(threeLeggedProperties.getRedirectUrl())
+            .redirect_uri(loginProp.getRedirectUrl())
             .build();
     Call<AccessTokenResponse> call =
         loginAPI.getAccessToken(
             Settrade3LeggedLoginAPI.basicAuthorization(
-                threeLeggedProperties.getApiKey(), threeLeggedProperties.getApiSecret()),
+                loginProp.getApiKey(), loginProp.getApiSecret()),
             tokenReq);
 
     log.info("Request access token...");
     Response<AccessTokenResponse> response = call.execute();
-    if (response.isSuccessful()) {
-      log.info("Get access token...");
-      AccessTokenResponse atRes = response.body();
-      accessTokenSupplier.setAuthorization("Bearer " + atRes.getAccess_token());
-
-      userInfo.setLogin(true);
-      userInfo.setBrokerId(atRes.getBroker_id());
-      userInfo.setUsername(atRes.getAuthenticated_userid());
-      userInfo.setLoginTime(LocalDateTime.now());
-
-      log.info("Login success: {}", userInfo);
-      return ResponseEntity.ok(userInfo);
-    } else {
+    if (!response.isSuccessful()) {
       ErrorResponse error =
           ErrorResponse.builder()
               .code(OpenStreamingConstants.LOGIN_ERROR_CODE)
               .message("Login fail")
-              .additionalInfo("detail", response.errorBody().string())
+              .additionalInfo("detail", new TextNode(response.errorBody().string()))
               .build();
 
       log.info("Login fail: {}", error);
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
+
+    log.info("Get access token...");
+    AccessTokenResponse atRes = response.body();
+    accessTokenSupplier.setAuthorization("Bearer " + atRes.getAccess_token());
+
+    userInfo.setLogin(true);
+    userInfo.setBrokerId(atRes.getBroker_id());
+    userInfo.setUsername(atRes.getAuthenticated_userid());
+    userInfo.setLoginTime(LocalDateTime.now());
+
+    log.info("Login success: {}", userInfo);
+    return ResponseEntity.ok(userInfo);
   }
 
   @GetMapping("/login")
@@ -113,10 +114,10 @@ public class ThreeLeggedLoginConfig {
     log.info("Get login page...");
     String loginUrl =
         Settrade3LeggedLoginAPI.loginUrl(
-            threeLeggedProperties.getLoginHost(),
-            threeLeggedProperties.getApiKey(),
-            threeLeggedProperties.getRedirectUrl(),
-            threeLeggedProperties.getScope());
+            loginProp.getLoginHost(),
+            loginProp.getApiKey(),
+            loginProp.getRedirectUrl(),
+            loginProp.getScope());
     return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
         .header(HttpHeaders.LOCATION, loginUrl)
         .build();

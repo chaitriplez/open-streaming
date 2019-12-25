@@ -27,6 +27,7 @@ public class ResponseEntityConverter {
           .body(response.body());
     }
 
-    throw new CallFailException("Remote execute fail with response code: " + response.code(), response);
+    throw new CallFailException(
+        "Remote execute fail with response code: " + response.code(), response);
   }
 }

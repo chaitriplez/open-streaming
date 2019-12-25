@@ -5,9 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
 @ConfigurationProperties("openstreaming.two-legged")
-public class TwoLeggedProperties {
+public class TwoLeggedLoginProperties {
   private String appId;
   private String apiKey;
   private String apiSecret;
 }
-

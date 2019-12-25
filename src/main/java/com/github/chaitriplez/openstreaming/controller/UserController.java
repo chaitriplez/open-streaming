@@ -1,6 +1,6 @@
 package com.github.chaitriplez.openstreaming.controller;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.chaitriplez.openstreaming.api.SettradeUserAPI;
 import com.github.chaitriplez.openstreaming.util.ResponseEntityConverter;
 import lombok.Setter;
@@ -17,7 +17,7 @@ public class UserController {
   @Autowired private SettradeUserAPI api;
 
   @GetMapping("/api/um/v1/{brokerId}/user/me")
-  ResponseEntity<ObjectNode> getUserInfo(@PathVariable("brokerId") String brokerId) {
+  ResponseEntity<JsonNode> getUserInfo(@PathVariable("brokerId") String brokerId) {
     return ResponseEntityConverter.from(api.getUserInfo(brokerId));
   }
 }

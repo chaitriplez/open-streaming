@@ -1,5 +1,6 @@
 package com.github.chaitriplez.openstreaming.controller;
 
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.github.chaitriplez.openstreaming.api.ErrorResponse;
 import com.github.chaitriplez.openstreaming.util.OpenStreamingConstants;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class RestExceptionHandler {
               ErrorResponse.builder()
                   .code(OpenStreamingConstants.REMOTE_CALL_ERROR_CODE)
                   .message(ex.getMessage())
-                  .additionalInfo("cause", ex.getCause().getMessage())
+                  .additionalInfo("cause", new TextNode(ex.getCause().getMessage()))
                   .build());
     }
   }

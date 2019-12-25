@@ -20,27 +20,23 @@ import retrofit2.Response;
 @Slf4j
 @Setter
 @ConditionalOnProperty(prefix = "openstreaming", name = "login-type", havingValue = "TWO_LEGGED")
-@EnableConfigurationProperties(TwoLeggedProperties.class)
+@EnableConfigurationProperties(TwoLeggedLoginProperties.class)
 @Configuration
 public class TwoLeggedLoginConfig {
 
   @Autowired private Settrade2LeggedLoginAPI loginAPI;
-  @Autowired private OpenStreamingProperties openStreamingProperties;
-  @Autowired private TwoLeggedProperties twoLeggedProperties;
+  @Autowired private OpenStreamingProperties osProp;
+  @Autowired private TwoLeggedLoginProperties loginProp;
   @Autowired private AccessTokenSupplier accessTokenSupplier;
 
   @Bean
   public OSUserInfo processLogin() throws IOException {
     log.info("Start login...");
     AccessToken2LeggedRequest tokenReq =
-        AccessToken2LeggedRequest.builder()
-            .apiKey(twoLeggedProperties.getApiKey())
-            .params("")
-            .build();
-    tokenReq.sign(twoLeggedProperties.getApiSecret());
+        AccessToken2LeggedRequest.builder().apiKey(loginProp.getApiKey()).params("").build();
+    tokenReq.sign(loginProp.getApiSecret());
     Call<AccessTokenResponse> call =
-        loginAPI.getAccessToken(
-            openStreamingProperties.getBrokerId(), twoLeggedProperties.getAppId(), tokenReq);
+        loginAPI.getAccessToken(osProp.getBrokerId(), loginProp.getAppId(), tokenReq);
 
     log.info("Request access token...");
     Response<AccessTokenResponse> response = call.execute();

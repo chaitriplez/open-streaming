@@ -1,0 +1,20 @@
+spring:
+  jackson:
+    serialization:
+      WRITE_DATE_KEYS_AS_TIMESTAMPS: false
+
+openstreaming:
+  broker-id: # XXX
+  user-type: # INVESTOR, MKT_REP
+  login-type: # TWO_LEGGED, THREE_LEGGED
+  api-host: # https://open-api.settrade.com/
+  two-legged:
+    app-id:
+    api-key:
+    api-secret:
+  three-legged:
+    login-host:
+    api-key:
+    api-secret:
+    redirect-url: # http://localhost:8080/login
+    scope:

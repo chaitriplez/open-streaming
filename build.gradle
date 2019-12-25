@@ -1,8 +1,8 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.1.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-	id 'java'
-	id "com.cinnober.gradle.semver-git" version "2.5.0"
+	id 'org.springframework.boot' version '2.2.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+    id "com.cinnober.gradle.semver-git" version "2.5.0"
 }
 
 group = 'com.github.chaitriplez'
@@ -13,7 +13,18 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	implementation 'com.squareup.retrofit2:retrofit:2.7.0'
+	implementation 'com.squareup.retrofit2:converter-jackson:2.7.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+	compileOnly 'org.projectlombok:lombok:1.18.10'
+	annotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+	runtimeOnly files('local-conf')
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}

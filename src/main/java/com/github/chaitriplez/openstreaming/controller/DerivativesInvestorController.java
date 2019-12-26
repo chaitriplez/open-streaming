@@ -1,13 +1,14 @@
 package com.github.chaitriplez.openstreaming.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.github.chaitriplez.openstreaming.api.AccountInfoResponse;
 import com.github.chaitriplez.openstreaming.api.InvestorCancelOrderRequest;
 import com.github.chaitriplez.openstreaming.api.InvestorChangeOrderRequest;
 import com.github.chaitriplez.openstreaming.api.InvestorPlaceOrderRequest;
 import com.github.chaitriplez.openstreaming.api.OrderResponse;
 import com.github.chaitriplez.openstreaming.api.PlaceOrderResponse;
+import com.github.chaitriplez.openstreaming.api.PortfolioResponse;
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesInvestorAPI;
+import com.github.chaitriplez.openstreaming.api.TradeResponse;
 import com.github.chaitriplez.openstreaming.util.ResponseEntityConverter;
 import java.util.List;
 import lombok.Setter;
@@ -77,13 +78,13 @@ public class DerivativesInvestorController {
   }
 
   @GetMapping("/api/seosd/v1/{brokerId}/accounts/{accountNo}/portfolios")
-  ResponseEntity<JsonNode> getPortfolio(
+  ResponseEntity<List<PortfolioResponse>> getPortfolio(
       @PathVariable("brokerId") String brokerId, @PathVariable("accountNo") String accountNo) {
     return ResponseEntityConverter.from(api.getPortfolio(brokerId, accountNo));
   }
 
   @GetMapping("/api/seosd/v1/{brokerId}/accounts/{accountNo}/trades")
-  ResponseEntity<List<JsonNode>> listTrade(
+  ResponseEntity<List<TradeResponse>> listTrade(
       @PathVariable("brokerId") String brokerId, @PathVariable("accountNo") String accountNo) {
     return ResponseEntityConverter.from(api.listTrade(brokerId, accountNo));
   }

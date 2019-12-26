@@ -1,6 +1,5 @@
 package com.github.chaitriplez.openstreaming.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -52,10 +51,10 @@ public interface SettradeDerivativesInvestorAPI {
       @Path("brokerId") String brokerId, @Path("accountNo") String accountNo);
 
   @GET("/api/seosd/v1/{brokerId}/accounts/{accountNo}/portfolios")
-  Call<JsonNode> getPortfolio(
+  Call<List<PortfolioResponse>> getPortfolio(
       @Path("brokerId") String brokerId, @Path("accountNo") String accountNo);
 
   @GET("/api/seosd/v1/{brokerId}/accounts/{accountNo}/trades")
-  Call<List<JsonNode>> listTrade(
+  Call<List<TradeResponse>> listTrade(
       @Path("brokerId") String brokerId, @Path("accountNo") String accountNo);
 }

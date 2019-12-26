@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class PlaceOrderRequest {
   Position position;
-  Side side;
+  LongShort side;
   String symbol;
   Integer volume;
   PriceType priceType;

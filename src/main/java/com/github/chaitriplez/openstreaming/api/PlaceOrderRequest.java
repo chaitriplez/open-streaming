@@ -24,5 +24,5 @@ public class PlaceOrderRequest {
   BigDecimal stopPrice;
   String stopSymbol;
 
-  boolean bypassWarning;
+  Boolean bypassWarning;
 }

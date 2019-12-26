@@ -2,8 +2,6 @@ spring:
   jackson:
     serialization:
       WRITE_DATE_KEYS_AS_TIMESTAMPS: false
-  mvc:
-    throw-exception-if-no-handler-found: true
 
 openstreaming:
   broker-id: # XXX

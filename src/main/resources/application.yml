@@ -2,6 +2,8 @@ spring:
   jackson:
     serialization:
       WRITE_DATE_KEYS_AS_TIMESTAMPS: false
+  mvc:
+    throw-exception-if-no-handler-found: true
 
 openstreaming:
   broker-id: # XXX
@@ -9,12 +11,17 @@ openstreaming:
   login-type: # TWO_LEGGED, THREE_LEGGED
   api-host: # https://open-api.settrade.com/
   two-legged:
-    app-id:
+    app-id: # ALGO
     api-key:
     api-secret:
   three-legged:
-    login-host:
+    login-host: # https://app.settrade.com/
     api-key:
     api-secret:
     redirect-url: # http://localhost:8080/login
-    scope:
+    scope: # place_order user
+  ip-filter:
+    enabled: false
+    allow: # pattern
+    deny: # pattern
+    deny-status: 403 # Forbidden

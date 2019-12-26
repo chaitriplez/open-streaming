@@ -1,5 +1,6 @@
 package com.github.chaitriplez.openstreaming.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -18,17 +19,43 @@ public interface SettradeDerivativesInvestorAPI {
   Call<OrderResponse> getOrder(
       @Path("brokerId") String brokerId,
       @Path("accountNo") String accountNo,
-      @Path("orderNo") String orderNo);
+      @Path("orderNo") Long orderNo);
 
   @POST("/api/seosd/v1/{brokerId}/accounts/{accountNo}/orders")
   Call<PlaceOrderResponse> placeOrder(
       @Path("brokerId") String brokerId,
       @Path("accountNo") String accountNo,
-      @Body PlaceOrderRequest placeOrderRequest);
+      @Body InvestorPlaceOrderRequest placeOrderRequest);
 
   @PATCH("/api/seosd/v1/{brokerId}/accounts/{accountNo}/orders/{orderNo}/cancel")
   Call<Void> cancelOrder(
       @Path("brokerId") String brokerId,
       @Path("accountNo") String accountNo,
-      @Path("orderNo") String orderNo);
+      @Path("orderNo") Long orderNo,
+      @Body InvestorCancelOrderRequest cancelRequest);
+
+  @PATCH("/api/seosd/v1/{brokerId}/accounts/{accountNo}/cancel")
+  Call<CancelMultipleOrdersResponse> cancelMultipleOrders(
+      @Path("brokerId") String brokerId,
+      @Path("accountNo") String accountNo,
+      @Body CancelMultipleOrderRequest cancelRequest);
+
+  @PATCH("/api/seosd/v1/{brokerId}/accounts/{accountNo}/orders/{orderNo}/change")
+  Call<Void> changeOrder(
+      @Path("brokerId") String brokerId,
+      @Path("accountNo") String accountNo,
+      @Path("orderNo") Long orderNo,
+      @Body InvestorChangeOrderRequest changeRequest);
+
+  @GET("/api/seosd/v1/{brokerId}/accounts/{accountNo}/account-info")
+  Call<AccountInfoResponse> getAccountInfo(
+      @Path("brokerId") String brokerId, @Path("accountNo") String accountNo);
+
+  @GET("/api/seosd/v1/{brokerId}/accounts/{accountNo}/portfolios")
+  Call<JsonNode> getPortfolio(
+      @Path("brokerId") String brokerId, @Path("accountNo") String accountNo);
+
+  @GET("/api/seosd/v1/{brokerId}/accounts/{accountNo}/trades")
+  Call<List<JsonNode>> listTrade(
+      @Path("brokerId") String brokerId, @Path("accountNo") String accountNo);
 }

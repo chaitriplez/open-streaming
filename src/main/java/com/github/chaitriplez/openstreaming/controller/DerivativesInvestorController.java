@@ -1,7 +1,11 @@
 package com.github.chaitriplez.openstreaming.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.chaitriplez.openstreaming.api.AccountInfoResponse;
+import com.github.chaitriplez.openstreaming.api.InvestorCancelOrderRequest;
+import com.github.chaitriplez.openstreaming.api.InvestorChangeOrderRequest;
+import com.github.chaitriplez.openstreaming.api.InvestorPlaceOrderRequest;
 import com.github.chaitriplez.openstreaming.api.OrderResponse;
-import com.github.chaitriplez.openstreaming.api.PlaceOrderRequest;
 import com.github.chaitriplez.openstreaming.api.PlaceOrderResponse;
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesInvestorAPI;
 import com.github.chaitriplez.openstreaming.util.ResponseEntityConverter;
@@ -34,7 +38,7 @@ public class DerivativesInvestorController {
   ResponseEntity<OrderResponse> getOrder(
       @PathVariable("brokerId") String brokerId,
       @PathVariable("accountNo") String accountNo,
-      @PathVariable("orderNo") String orderNo) {
+      @PathVariable("orderNo") Long orderNo) {
     return ResponseEntityConverter.from(api.getOrder(brokerId, accountNo, orderNo));
   }
 
@@ -42,7 +46,7 @@ public class DerivativesInvestorController {
   ResponseEntity<PlaceOrderResponse> placeOrder(
       @PathVariable("brokerId") String brokerId,
       @PathVariable("accountNo") String accountNo,
-      @RequestBody PlaceOrderRequest placeOrderRequest) {
+      @RequestBody InvestorPlaceOrderRequest placeOrderRequest) {
     return ResponseEntityConverter.from(api.placeOrder(brokerId, accountNo, placeOrderRequest));
   }
 
@@ -50,7 +54,37 @@ public class DerivativesInvestorController {
   ResponseEntity<Void> cancelOrder(
       @PathVariable("brokerId") String brokerId,
       @PathVariable("accountNo") String accountNo,
-      @PathVariable("orderNo") String orderNo) {
-    return ResponseEntityConverter.from(api.cancelOrder(brokerId, accountNo, orderNo));
+      @PathVariable("orderNo") Long orderNo,
+      @RequestBody InvestorCancelOrderRequest cancelRequest) {
+    return ResponseEntityConverter.from(
+        api.cancelOrder(brokerId, accountNo, orderNo, cancelRequest));
+  }
+
+  @PatchMapping("/api/seosd/v1/{brokerId}/accounts/{accountNo}/orders/{orderNo}/change")
+  ResponseEntity<Void> changeOrder(
+      @PathVariable("brokerId") String brokerId,
+      @PathVariable("accountNo") String accountNo,
+      @PathVariable("orderNo") Long orderNo,
+      @RequestBody InvestorChangeOrderRequest changeRequest) {
+    return ResponseEntityConverter.from(
+        api.changeOrder(brokerId, accountNo, orderNo, changeRequest));
+  }
+
+  @GetMapping("/api/seosd/v1/{brokerId}/accounts/{accountNo}/account-info")
+  ResponseEntity<AccountInfoResponse> getAccountInfo(
+      @PathVariable("brokerId") String brokerId, @PathVariable("accountNo") String accountNo) {
+    return ResponseEntityConverter.from(api.getAccountInfo(brokerId, accountNo));
+  }
+
+  @GetMapping("/api/seosd/v1/{brokerId}/accounts/{accountNo}/portfolios")
+  ResponseEntity<JsonNode> getPortfolio(
+      @PathVariable("brokerId") String brokerId, @PathVariable("accountNo") String accountNo) {
+    return ResponseEntityConverter.from(api.getPortfolio(brokerId, accountNo));
+  }
+
+  @GetMapping("/api/seosd/v1/{brokerId}/accounts/{accountNo}/trades")
+  ResponseEntity<List<JsonNode>> listTrade(
+      @PathVariable("brokerId") String brokerId, @PathVariable("accountNo") String accountNo) {
+    return ResponseEntityConverter.from(api.listTrade(brokerId, accountNo));
   }
 }

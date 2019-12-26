@@ -4,7 +4,6 @@ import com.github.chaitriplez.openstreaming.util.IpFilter;
 import javax.servlet.Filter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.filters.RemoteAddrFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +23,11 @@ public class IpFilterConfig {
 
   @Bean
   public Filter ipFilter() {
-    log.info("Enable ip filter: allow[{}] deny[{}] denyStatus[{}]", allow, deny, HttpStatus.valueOf(denyStatus));
+    log.info(
+        "Enable ip filter: allow[{}] deny[{}] denyStatus[{}]",
+        allow,
+        deny,
+        HttpStatus.valueOf(denyStatus));
     IpFilter filter = new IpFilter();
     filter.setAllow(allow);
     filter.setDeny(deny);

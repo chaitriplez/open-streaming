@@ -69,7 +69,7 @@ public class OAuth3LeggedLogin {
       Response<AccessTokenResponse> result = call.execute();
       if (result.isSuccessful()) {
         AccessTokenResponse accessToken = result.body();
-        authorization = () -> "Bearer " + accessToken.getAccess_token();
+        authorization = () -> "Bearer " + accessToken.getAccessToken();
         log.info("Access Token: {}", accessToken);
       } else {
         log.error("Cannot get access token: {}", result.errorBody().string());

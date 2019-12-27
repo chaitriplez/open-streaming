@@ -11,6 +11,8 @@ import java.util.Properties;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.logging.HttpLoggingInterceptor.Level;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -53,7 +55,7 @@ public class OAuth2LeggedLogin {
       Response<AccessTokenResponse> result = call.execute();
       if (result.isSuccessful()) {
         AccessTokenResponse accessToken = result.body();
-        authorization = () -> "Bearer " + accessToken.getAccess_token();
+        authorization = () -> "Bearer " + accessToken.getAccessToken();
         log.info("Access Token: {}", accessToken);
       } else {
         log.error("Cannot get access token: {}", result.errorBody().string());

@@ -98,11 +98,11 @@ public class ThreeLeggedLoginConfig {
 
     log.info("Get access token...");
     AccessTokenResponse atRes = response.body();
-    accessTokenSupplier.setAuthorization("Bearer " + atRes.getAccess_token());
+    accessTokenSupplier.setAuthorization("Bearer " + atRes.getAccessToken());
 
     userInfo.setLogin(true);
-    userInfo.setBrokerId(atRes.getBroker_id());
-    userInfo.setUsername(atRes.getAuthenticated_userid());
+    userInfo.setBrokerId(atRes.getBrokerId());
+    userInfo.setUsername(atRes.getAuthenticatedUserid());
     userInfo.setLoginTime(LocalDateTime.now());
 
     log.info("Login success: {}", userInfo);

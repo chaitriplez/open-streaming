@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import retrofit2.http.Body;
-import retrofit2.http.Path;
 
 @Setter
 @RestController
@@ -68,9 +67,9 @@ public class DerivativesMktRepController {
 
   @PatchMapping("/api/seosd/v1/{brokerId}/mktrep/accounts/{accountNo}/cancel")
   ResponseEntity<CancelMultipleOrdersResponse> cancelMultipleOrders(
-      @Path("brokerId") String brokerId,
-      @Path("accountNo") String accountNo,
-      @Body List<Long> orders) {
+      @PathVariable("brokerId") String brokerId,
+      @PathVariable("accountNo") String accountNo,
+      @RequestBody List<Long> orders) {
     return ResponseEntityConverter.from(orderApi.cancelMultipleOrders(brokerId, accountNo, orders));
   }
 

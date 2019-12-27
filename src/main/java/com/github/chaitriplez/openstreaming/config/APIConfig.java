@@ -46,6 +46,7 @@ public class APIConfig {
   public HttpLoggingInterceptor httpLogger() {
     HttpLoggingInterceptor logger = new HttpLoggingInterceptor(new HttpLogger());
     logger.setLevel(retrofitProp.getHttpLoggingLevel());
+
     return logger;
   }
 
@@ -58,9 +59,7 @@ public class APIConfig {
             .timeoutDuration(retrofitProp.getUpstreamQueryTimeout())
             .build();
 
-    RateLimiterRegistry rateLimiterRegistry = RateLimiterRegistry.of(config);
-
-    return rateLimiterRegistry.rateLimiter("query");
+    return RateLimiterRegistry.of(config).rateLimiter("query");
   }
 
   @Bean
@@ -72,9 +71,7 @@ public class APIConfig {
             .timeoutDuration(retrofitProp.getUpstreamOrderTimeout())
             .build();
 
-    RateLimiterRegistry rateLimiterRegistry = RateLimiterRegistry.of(config);
-
-    return rateLimiterRegistry.rateLimiter("order");
+    return RateLimiterRegistry.of(config).rateLimiter("order");
   }
 
   @Bean

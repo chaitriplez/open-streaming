@@ -1,5 +1,6 @@
 package com.github.chaitriplez.openstreaming.api;
 
+import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.PATCH;
@@ -19,4 +20,17 @@ public interface SettradeDerivativesMktRepOrderAPI {
       @Path("brokerId") String brokerId,
       @Path("accountNo") String accountNo,
       @Path("orderNo") String orderNo);
+
+  @PATCH("/api/seosd/v1/{brokerId}/mktrep/accounts/{accountNo}/cancel")
+  Call<CancelMultipleOrdersResponse> cancelMultipleOrders(
+      @Path("brokerId") String brokerId,
+      @Path("accountNo") String accountNo,
+      @Body List<Long> orders);
+
+  @PATCH("/api/seosd/v1/{brokerId}/mktrep/accounts/{accountNo}/orders/{orderNo}/change")
+  Call<Void> changeOrder(
+      @Path("brokerId") String brokerId,
+      @Path("accountNo") String accountNo,
+      @Path("orderNo") Long orderNo,
+      @Body MktRepChangeOrderRequest changeRequest);
 }

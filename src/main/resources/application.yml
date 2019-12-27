@@ -42,4 +42,3 @@ openstreaming:
 logging:
   level:
     com.github.chaitriplez.openstreaming.util.IpFilter: DEBUG
-    com.github.chaitriplez.openstreaming.util.HttpLogger: DEBUG

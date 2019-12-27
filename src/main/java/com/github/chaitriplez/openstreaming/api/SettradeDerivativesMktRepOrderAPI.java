@@ -1,21 +1,12 @@
 package com.github.chaitriplez.openstreaming.api;
 
-import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-public interface SettradeDerivativesMktRepAPI {
-
-  @GET("/api/seosd/v1/{brokerId}/mktrep/accounts/{accountNo}/orders")
-  Call<List<OrderResponse>> listOrder(
-      @Path("brokerId") String brokerId, @Path("accountNo") String accountNo);
-
-  @GET("/api/seosd/v1/{brokerId}/mktrep/orders/{orderNo}")
-  Call<OrderResponse> getOrder(@Path("brokerId") String brokerId, @Path("orderNo") String orderNo);
+public interface SettradeDerivativesMktRepOrderAPI {
 
   @POST("/api/seosd/v1/{brokerId}/mktrep/accounts/{accountNo}/orders")
   Call<PlaceOrderResponse> placeOrder(

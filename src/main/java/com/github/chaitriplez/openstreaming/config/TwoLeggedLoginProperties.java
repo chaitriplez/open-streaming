@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties("openstreaming.two-legged")
+@ConfigurationProperties(prefix = "openstreaming.two-legged")
 public class TwoLeggedLoginProperties {
   private String appId;
   private String apiKey;

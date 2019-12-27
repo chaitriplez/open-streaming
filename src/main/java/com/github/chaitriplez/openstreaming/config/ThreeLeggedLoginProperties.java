@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties("openstreaming.three-legged")
+@ConfigurationProperties(prefix = "openstreaming.three-legged")
 public class ThreeLeggedLoginProperties {
   private String loginHost;
   private String apiKey;

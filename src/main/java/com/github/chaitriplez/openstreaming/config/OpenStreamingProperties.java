@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties("openstreaming")
+@ConfigurationProperties(prefix = "openstreaming")
 public class OpenStreamingProperties {
   private String brokerId;
   private UserType userType;

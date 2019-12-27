@@ -88,7 +88,7 @@ public class DerivativesInvestorController {
   ResponseEntity<CancelMultipleOrdersResponse> cancelMultipleOrders(
       @PathVariable("brokerId") String brokerId,
       @PathVariable("accountNo") String accountNo,
-      @PathVariable CancelMultipleOrderRequest cancelRequest) {
+      @RequestBody CancelMultipleOrderRequest cancelRequest) {
     return ResponseEntityConverter.from(
         orderApi.cancelMultipleOrders(brokerId, accountNo, cancelRequest));
   }

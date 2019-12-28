@@ -3,7 +3,6 @@ package com.github.chaitriplez.openstreaming.controller;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.github.chaitriplez.openstreaming.api.ErrorResponse;
 import com.github.chaitriplez.openstreaming.util.OpenStreamingConstants;
-import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,35 +11,19 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import retrofit2.Response;
 
 @Slf4j
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(CallFailException.class)
-  protected ResponseEntity<Object> handleCallFailException(CallFailException ex)
-      throws IOException {
-    if (ex.getResponse().isPresent()) {
-      Response response = ex.getResponse().get();
-      return ResponseEntity.status(response.code())
-          .headers(
-              httpHeaders ->
-                  response
-                      .headers()
-                      .toMultimap()
-                      .forEach((k, values) -> httpHeaders.addAll(k, values)))
-          .body(response.errorBody().string());
-    } else {
-      log.error("Cannot call remote server", ex);
-      return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-          .body(
-              ErrorResponse.builder()
-                  .code(OpenStreamingConstants.REMOTE_CALL_ERROR_CODE)
-                  .message(ex.getMessage())
-                  .additionalInfo("cause", new TextNode(ex.getCause().getMessage()))
-                  .build());
+  protected ResponseEntity<Object> handleCallFailException(CallFailException ex) {
+    ErrorResponse.ErrorResponseBuilder builder =
+        ErrorResponse.builder().code(ex.getErrorCode()).message(ex.getMessage());
+    if (ex.getCause() != null) {
+      builder = builder.additionalInfo("cause", new TextNode(ex.getCause().getMessage()));
     }
+    return ResponseEntity.status(ex.getHttpStatus()).body(builder.build());
   }
 
   @Override

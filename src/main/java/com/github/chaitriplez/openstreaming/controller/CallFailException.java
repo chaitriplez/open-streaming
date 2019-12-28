@@ -1,21 +1,24 @@
 package com.github.chaitriplez.openstreaming.controller;
 
-import java.util.Optional;
-import retrofit2.Response;
+import lombok.Data;
+import org.springframework.http.HttpStatus;
 
+@Data
 public class CallFailException extends RuntimeException {
-  private Response response;
 
-  public CallFailException(String message, Response response) {
+  private HttpStatus httpStatus;
+  private String errorCode;
+
+  public CallFailException(String message, HttpStatus httpStatus, String errorCode) {
     super(message);
-    this.response = response;
+    this.httpStatus = httpStatus;
+    this.errorCode = errorCode;
   }
 
-  public CallFailException(String message, Throwable cause) {
+  public CallFailException(
+      String message, Throwable cause, HttpStatus httpStatus, String errorCode) {
     super(message, cause);
-  }
-
-  public Optional<Response> getResponse() {
-    return Optional.ofNullable(response);
+    this.httpStatus = httpStatus;
+    this.errorCode = errorCode;
   }
 }

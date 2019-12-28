@@ -26,8 +26,8 @@ $ docker run --rm -e SPRING_PROFILES_ACTIVE=investor -v ${PWD}/application-inves
 - [x] API proxy investor
 - [x] API proxy market representative
 - [x] API rate limit
-- [ ] API logging
-  - [ ] Access log
+- [x] API logging
+  - [x] Access log
   - [x] Upstream logging
 - [x] IP filtering
 - [ ] Cancel order by account

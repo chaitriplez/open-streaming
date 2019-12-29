@@ -22,16 +22,6 @@ openstreaming:
     api-secret:
     redirect-url: # http://localhost:8080/login
     scope: # place_order user
-  http-logging:
-    level: BASIC # NONE, BASIC, HEADERS, BODY
-  upstream-query-limit: # Default: 5 messages/sec, timeout 15 seconds
-    period: 1
-    rate: 5
-    timeout: 15
-  upstream-order-limit: # Default: 5 messages/sec, timeout 15 seconds
-    period: 1
-    rate: 5
-    timeout: 15
   ip-filter:
     enabled: true
     allow: '(127.0.0.1)|(0:0:0:0:0:0:0:1)' # pattern

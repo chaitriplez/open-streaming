@@ -30,10 +30,11 @@ $ docker run --rm -e SPRING_PROFILES_ACTIVE=investor -v ${PWD}/application-inves
   - [x] Access log
   - [x] Upstream logging
 - [x] IP filtering
-- [ ] Cancel order by account
+- [ ] Cancel all order
 - [ ] Cancel order by symbol
 - [ ] Close all open position
+- [ ] Quote
 - [ ] Trailing stop order
 - [ ] Bracket order
-- [ ] Position limit by symbol
+- [ ] Risk control: Position limit
 - [ ] Notification e.g. Facebook, Line

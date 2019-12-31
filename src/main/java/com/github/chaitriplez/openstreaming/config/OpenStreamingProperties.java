@@ -7,6 +7,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "openstreaming")
 public class OpenStreamingProperties {
   private String brokerId;
+  private String username;
+  private String accountNo;
   private UserType userType;
   private LoginType loginType;
   private String apiHost;

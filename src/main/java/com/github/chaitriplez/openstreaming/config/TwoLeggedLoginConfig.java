@@ -3,10 +3,11 @@ package com.github.chaitriplez.openstreaming.config;
 import com.github.chaitriplez.openstreaming.api.AccessToken2LeggedRequest;
 import com.github.chaitriplez.openstreaming.api.AccessTokenResponse;
 import com.github.chaitriplez.openstreaming.api.Settrade2LeggedLoginAPI;
-import com.github.chaitriplez.openstreaming.service.OSUserInfo;
+import com.github.chaitriplez.openstreaming.service.LoginUserInfo;
 import com.github.chaitriplez.openstreaming.util.AccessTokenSupplier;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class TwoLeggedLoginConfig {
   @Autowired private AccessTokenSupplier accessTokenSupplier;
 
   @Bean
-  public OSUserInfo processLogin() throws IOException {
+  public LoginUserInfo processLogin() throws IOException {
     log.info("Start login...");
     AccessToken2LeggedRequest tokenReq =
         AccessToken2LeggedRequest.builder().apiKey(loginProp.getApiKey()).params("").build();
@@ -46,9 +47,13 @@ public class TwoLeggedLoginConfig {
 
     log.info("Get access token...");
     AccessTokenResponse atRes = response.body();
+    if ((!Objects.equals(atRes.getBrokerId(), osProp.getBrokerId()))
+        || (!Objects.equals(atRes.getAuthenticatedUserid(), osProp.getUsername()))) {
+      throw new IllegalStateException("Login fail: Invalid broker/username");
+    }
     accessTokenSupplier.setAuthorization("Bearer " + atRes.getAccessToken());
 
-    OSUserInfo userInfo = new OSUserInfo();
+    LoginUserInfo userInfo = new LoginUserInfo();
     userInfo.setLogin(true);
     userInfo.setBrokerId(atRes.getBrokerId());
     userInfo.setUsername(atRes.getAuthenticatedUserid());

@@ -9,6 +9,8 @@ spring:
 
 openstreaming:
   broker-id: # XXX
+  username: # Validation
+  account-no: # Validation
   user-type: # INVESTOR, MKT_REP
   login-type: # TWO_LEGGED, THREE_LEGGED
   api-host: # https://open-api.settrade.com/
@@ -35,6 +37,8 @@ openstreaming:
     upstream-order-limit: 5
     upstream-order-refresh-period: 1s
     upstream-order-timeout: 15s
+  pull-order:
+    check-interval: 5s
 logging:
   level:
     com.github.chaitriplez.openstreaming.util.IpFilter: DEBUG

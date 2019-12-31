@@ -5,11 +5,12 @@ import com.github.chaitriplez.openstreaming.api.AccessToken3LeggedRequest;
 import com.github.chaitriplez.openstreaming.api.AccessTokenResponse;
 import com.github.chaitriplez.openstreaming.api.ErrorResponse;
 import com.github.chaitriplez.openstreaming.api.Settrade3LeggedLoginAPI;
-import com.github.chaitriplez.openstreaming.service.OSUserInfo;
+import com.github.chaitriplez.openstreaming.service.LoginUserInfo;
 import com.github.chaitriplez.openstreaming.util.AccessTokenSupplier;
 import com.github.chaitriplez.openstreaming.util.OpenStreamingConstants;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -36,9 +37,10 @@ import retrofit2.Response;
 public class ThreeLeggedLoginConfig {
 
   @Autowired private Settrade3LeggedLoginAPI loginAPI;
+  @Autowired private OpenStreamingProperties osProp;
   @Autowired private ThreeLeggedLoginProperties loginProp;
   @Autowired private AccessTokenSupplier accessTokenSupplier;
-  @Autowired private OSUserInfo userInfo;
+  @Autowired private LoginUserInfo userInfo;
 
   @PostConstruct
   public void init() {
@@ -52,8 +54,8 @@ public class ThreeLeggedLoginConfig {
   }
 
   @Bean
-  public OSUserInfo userInfo() {
-    return new OSUserInfo();
+  public LoginUserInfo userInfo() {
+    return new LoginUserInfo();
   }
 
   @GetMapping(
@@ -98,8 +100,30 @@ public class ThreeLeggedLoginConfig {
 
     log.info("Get access token...");
     AccessTokenResponse atRes = response.body();
-    accessTokenSupplier.setAuthorization("Bearer " + atRes.getAccessToken());
+    if ((!Objects.equals(atRes.getBrokerId(), osProp.getBrokerId()))
+        || (!Objects.equals(atRes.getAuthenticatedUserid(), osProp.getUsername()))) {
+      ErrorResponse error =
+          ErrorResponse.builder()
+              .code(OpenStreamingConstants.LOGIN_ERROR_CODE)
+              .message("Invalid broker/username")
+              .additionalInfo(
+                  "detail",
+                  new TextNode(
+                      "Expected "
+                          + osProp.getBrokerId()
+                          + "/"
+                          + osProp.getUsername()
+                          + " but "
+                          + atRes.getBrokerId()
+                          + "/"
+                          + atRes.getAuthenticatedUserid()))
+              .build();
 
+      log.info("Login fail: {}", error);
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    accessTokenSupplier.setAuthorization("Bearer " + atRes.getAccessToken());
     userInfo.setLogin(true);
     userInfo.setBrokerId(atRes.getBrokerId());
     userInfo.setUsername(atRes.getAuthenticatedUserid());

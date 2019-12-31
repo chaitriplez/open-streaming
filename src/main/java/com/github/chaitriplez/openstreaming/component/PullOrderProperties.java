@@ -12,5 +12,4 @@ public class PullOrderProperties {
 
   @DurationUnit(ChronoUnit.SECONDS)
   private Duration checkInterval = Duration.ofSeconds(5);
-  private int numberOfWorker = 1;
 }

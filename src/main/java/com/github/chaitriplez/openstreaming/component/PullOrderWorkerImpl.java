@@ -51,7 +51,7 @@ public class PullOrderWorkerImpl implements PullOrderWorker {
 
   @PreDestroy
   public void destroy() {
-    log.info("Start pull order worker");
+    log.info("Stop pull order worker");
     executorService.shutdownNow();
     monitorOrders.clear();
   }
@@ -111,20 +111,7 @@ public class PullOrderWorkerImpl implements PullOrderWorker {
       OrderResponse orderResponse = response.body();
       OrderCache cache = OrderCache.from(orderResponse);
       boolean update = orderCacheManager.processIfNewer(cache);
-      if (update) {
-        log.info(
-            "Cache order:{} {} {}@{} qty:{} balance:{} match:{} cancel:{} status:{}",
-            cache.getOrderNo(),
-            cache.getSide(),
-            cache.getSymbol(),
-            cache.getPx(),
-            cache.getQty(),
-            cache.getBalanceQty(),
-            cache.getMatchQty(),
-            cache.getCancelQty(),
-            cache.getStatus());
-      }
-      if (cache.getBalanceQty() == 0) {
+      if (update && cache.getBalanceQty() == 0) {
         log.info("No balance stop monitor:{}", orderNo);
         doStopMonitor(orderNo);
       }

@@ -12,7 +12,7 @@ public interface SettradeDerivativesMktRepQueryAPI {
       @Path("brokerId") String brokerId, @Path("accountNo") String accountNo);
 
   @GET("/api/seosd/v1/{brokerId}/mktrep/orders/{orderNo}")
-  Call<OrderResponse> getOrder(@Path("brokerId") String brokerId, @Path("orderNo") String orderNo);
+  Call<OrderResponse> getOrder(@Path("brokerId") String brokerId, @Path("orderNo") Long orderNo);
 
   @GET("/api/seosd/v1/{brokerId}/mktrep/accounts/{accountNo}/trades")
   Call<List<TradeResponse>> listTrade(

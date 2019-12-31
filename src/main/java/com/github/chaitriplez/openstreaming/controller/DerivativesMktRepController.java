@@ -37,7 +37,7 @@ public class DerivativesMktRepController {
 
   @GetMapping("/api/seosd/v1/{brokerId}/mktrep/orders/{orderNo}")
   ResponseEntity<OrderResponse> getOrder(
-      @PathVariable("brokerId") String brokerId, @PathVariable("orderNo") String orderNo) {
+      @PathVariable("brokerId") String brokerId, @PathVariable("orderNo") Long orderNo) {
     return ResponseEntityConverter.from(queryApi.getOrder(brokerId, orderNo));
   }
 

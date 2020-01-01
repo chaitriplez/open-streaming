@@ -17,8 +17,9 @@ public class OrderCacheManagerImpl implements OrderCacheManager {
 
   private final ConcurrentMap<Long, Long> orderVersions = new ConcurrentHashMap<>();
 
+  private List<OrderCacheListener> listeners;
+
   @Autowired private OrderCacheRepository orderCacheRepository;
-  @Autowired private List<OrderCacheListener> listeners;
 
   @Override
   public boolean processIfNewer(OrderCache cache) {
@@ -38,5 +39,11 @@ public class OrderCacheManagerImpl implements OrderCacheManager {
       return true;
     }
     return false;
+  }
+
+  @Autowired(required = false)
+  @Override
+  public void setListeners(List<OrderCacheListener> listeners) {
+    this.listeners = listeners;
   }
 }

@@ -3,7 +3,6 @@ package com.github.chaitriplez.openstreaming.config;
 import com.github.chaitriplez.openstreaming.api.AccessToken2LeggedRequest;
 import com.github.chaitriplez.openstreaming.api.AccessTokenResponse;
 import com.github.chaitriplez.openstreaming.api.Settrade2LeggedLoginAPI;
-import com.github.chaitriplez.openstreaming.service.LoginUserInfo;
 import com.github.chaitriplez.openstreaming.util.AccessTokenSupplier;
 import java.io.IOException;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package com.github.chaitriplez.openstreaming.service;
+package com.github.chaitriplez.openstreaming.component;
 
 import java.time.LocalDateTime;
 import lombok.Data;

@@ -5,7 +5,6 @@ import com.github.chaitriplez.openstreaming.api.AccessToken3LeggedRequest;
 import com.github.chaitriplez.openstreaming.api.AccessTokenResponse;
 import com.github.chaitriplez.openstreaming.api.ErrorResponse;
 import com.github.chaitriplez.openstreaming.api.Settrade3LeggedLoginAPI;
-import com.github.chaitriplez.openstreaming.service.LoginUserInfo;
 import com.github.chaitriplez.openstreaming.util.AccessTokenSupplier;
 import com.github.chaitriplez.openstreaming.util.OpenStreamingConstants;
 import java.io.IOException;

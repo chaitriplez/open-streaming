@@ -3,7 +3,7 @@ package com.github.chaitriplez.openstreaming.component;
 import java.util.concurrent.CountDownLatch;
 
 public interface JobLatch {
-  CountDownLatch get(String jobId);
+  CountDownLatch get(Long jobId);
 
-  CountDownLatch create(String jobId, int count);
+  CountDownLatch create(Long jobId, int count);
 }

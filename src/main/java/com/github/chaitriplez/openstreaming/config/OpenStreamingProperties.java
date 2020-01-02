@@ -9,6 +9,7 @@ public class OpenStreamingProperties {
   private String brokerId;
   private String username;
   private String accountNo;
+  private String pin;
   private UserType userType;
   private LoginType loginType;
   private String apiHost;

@@ -11,6 +11,7 @@ openstreaming:
   broker-id: # XXX
   username: # Validation
   account-no: # Validation
+  pin: # Save Pin Number
   user-type: # INVESTOR, MKT_REP
   login-type: # TWO_LEGGED, THREE_LEGGED
   api-host: # https://open-api.settrade.com/

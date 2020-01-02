@@ -46,16 +46,16 @@ public class OrderExecutionWorkerImpl implements OrderExecutionWorker, Applicati
     executor.submit(new Task(exe));
   }
 
-  private void jobProcessing(String jobDetailId) {
+  private void jobProcessing(Long jobDetailId) {
     JobDetail jobDetail = jobDetailRepository.findById(jobDetailId).get();
     jobDetail.setStatus(JobStatus.PROCESSING);
     jobDetailRepository.save(jobDetail);
   }
 
-  private void jobDone(String jobDetailId, String result) {
+  private void jobDone(Long jobDetailId, String result) {
     JobDetail jobDetail = jobDetailRepository.findById(jobDetailId).get();
     jobDetail.setStatus(JobStatus.DONE);
-    jobDetail.setResult(result);
+    jobDetail.setResponse(result);
     jobDetailRepository.save(jobDetail);
     CountDownLatch latch = jobLatch.get(jobDetail.getJobId());
     latch.countDown();

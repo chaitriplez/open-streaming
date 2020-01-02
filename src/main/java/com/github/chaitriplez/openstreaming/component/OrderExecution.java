@@ -8,9 +8,9 @@ public interface OrderExecution {
   /** @param context inject before execute and remove after execute */
   void setContext(OrderExecutionContext context);
 
-  String jobDetailId();
+  Long jobDetailId();
 
-  ExecutionResult execute();
+  ExecutionResult execute() throws Exception;
 
   enum ExecutionStatus {
     SUCCESS,

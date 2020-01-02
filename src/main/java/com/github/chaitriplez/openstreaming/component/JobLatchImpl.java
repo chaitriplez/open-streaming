@@ -9,15 +9,15 @@ import org.springframework.stereotype.Component;
 public class JobLatchImpl implements JobLatch {
 
   private static final CountDownLatch ZERO = new CountDownLatch(0);
-  private final ConcurrentMap<String, CountDownLatch> latches = new ConcurrentHashMap<>();
+  private final ConcurrentMap<Long, CountDownLatch> latches = new ConcurrentHashMap<>();
 
   @Override
-  public CountDownLatch get(String jobId) {
+  public CountDownLatch get(Long jobId) {
     return latches.getOrDefault(jobId, ZERO);
   }
 
   @Override
-  public CountDownLatch create(String jobId, int count) {
+  public CountDownLatch create(Long jobId, int count) {
     if (latches.containsKey(jobId)) {
       throw new IllegalStateException("Duplicate latch: " + jobId);
     }

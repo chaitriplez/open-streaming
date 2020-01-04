@@ -6,5 +6,6 @@ import java.util.List;
 /** Save order to redis server */
 public interface OrderCacheManager {
   boolean processIfNewer(OrderCache cache);
+
   void setListeners(List<OrderCacheListener> listeners);
 }

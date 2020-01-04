@@ -21,6 +21,7 @@ public interface OrderExecution {
   @Data
   class ExecutionResult {
     private ExecutionStatus status;
+    private String type;
     private String result;
     private Duration retryDelay;
   }

@@ -1,6 +1,7 @@
 package com.github.chaitriplez.openstreaming.repository;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
@@ -15,4 +16,13 @@ public class Job {
   private JobStatus status;
   private LocalDateTime createTime;
   private LocalDateTime lastUpdateTime;
+  private Long totalTime;
+
+  public void calculateTotalTime() {
+    totalTime =
+        createTime != null && lastUpdateTime != null
+            ? lastUpdateTime.toInstant(ZoneOffset.UTC).toEpochMilli()
+                - createTime.toInstant(ZoneOffset.UTC).toEpochMilli()
+            : -1;
+  }
 }

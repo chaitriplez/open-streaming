@@ -1,14 +1,11 @@
 package com.github.chaitriplez.openstreaming.component;
 
 import com.github.chaitriplez.openstreaming.component.OrderExecution.ExecutionResult;
-import com.github.chaitriplez.openstreaming.repository.Job;
-import com.github.chaitriplez.openstreaming.repository.JobDetail;
-import com.github.chaitriplez.openstreaming.repository.JobDetailRepository;
-import com.github.chaitriplez.openstreaming.repository.JobRepository;
-import com.github.chaitriplez.openstreaming.repository.JobStatus;
 import java.time.Duration;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import lombok.Setter;
@@ -28,13 +25,17 @@ public class OrderExecutionWorkerImpl implements OrderExecutionWorker, Applicati
 
   private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
+  private final ConcurrentMap<Long, Future> futures = new ConcurrentHashMap<>();
   private ApplicationContext applicationContext;
+  private final OrderExecutionContext context =
+      new OrderExecutionContext() {
+        @Override
+        public <T> T getBean(Class<T> requiredType) {
+          return applicationContext.getBean(requiredType);
+        }
+      };
 
-  @Autowired private JobRepository jobRepository;
-
-  @Autowired private JobDetailRepository jobDetailRepository;
-
-  @Autowired private JobLatch jobLatch;
+  @Autowired private JobManager jobManager;
 
   @Override
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -43,27 +44,19 @@ public class OrderExecutionWorkerImpl implements OrderExecutionWorker, Applicati
 
   @Override
   public void submit(OrderExecution exe) {
-    executor.submit(new Task(exe));
+    Future f = executor.submit(new Task(exe));
+    futures.put(exe.jobDetailId(), f);
   }
 
-  private void jobProcessing(Long jobDetailId) {
-    JobDetail jobDetail = jobDetailRepository.findById(jobDetailId).get();
-    jobDetail.setStatus(JobStatus.PROCESSING);
-    jobDetailRepository.save(jobDetail);
-  }
-
-  private void jobDone(Long jobDetailId, String result) {
-    JobDetail jobDetail = jobDetailRepository.findById(jobDetailId).get();
-    jobDetail.setStatus(JobStatus.DONE);
-    jobDetail.setResponse(result);
-    jobDetailRepository.save(jobDetail);
-    CountDownLatch latch = jobLatch.get(jobDetail.getJobId());
-    latch.countDown();
-    if (latch.getCount() == 0) {
-      Job job = jobRepository.findById(jobDetail.getJobId()).get();
-      job.setStatus(JobStatus.DONE);
-      jobRepository.save(job);
+  @Override
+  public boolean cancel(Long jobDetailId) {
+    Future f = futures.get(jobDetailId);
+    if (f != null && f.cancel(false)) {
+      jobManager.cancelJobDetail(jobDetailId);
+      futures.remove(jobDetailId);
+      return true;
     }
+    return false;
   }
 
   private class Task implements Runnable {
@@ -76,35 +69,37 @@ public class OrderExecutionWorkerImpl implements OrderExecutionWorker, Applicati
 
     @Override
     public void run() {
-      exe.setContext(new Context());
+      exe.setContext(context);
       try {
-        jobProcessing(exe.jobDetailId());
+        jobManager.startJobDetail(exe.jobDetailId());
 
         ExecutionResult result = exe.execute();
 
         switch (result.getStatus()) {
           case SUCCESS:
+            jobManager.successJobDetail(exe.jobDetailId(), result.getType(), result.getResult());
+            futures.remove(exe.jobDetailId());
+            break;
           case FAIL:
-            jobDone(exe.jobDetailId(), result.getResult());
+            jobManager.failJobDetail(exe.jobDetailId(), result.getType(), result.getResult());
+            futures.remove(exe.jobDetailId());
             break;
           case RETRY:
-            Duration delay = MIN_DELAY.plus(result.getRetryDelay());
-            executor.schedule(new Task(exe), delay.toMillis(), TimeUnit.MILLISECONDS);
+            jobManager.retryJobDetail(exe.jobDetailId(), result.getType(), result.getResult());
+            executor.schedule(
+                new Task(exe),
+                MIN_DELAY.toMillis() + result.getRetryDelay().toMillis(),
+                TimeUnit.MILLISECONDS);
             break;
         }
       } catch (Exception e) {
         log.error("Execution error", e);
-        jobDone(exe.jobDetailId(), e.getMessage());
+        jobManager.failJobDetail(
+            exe.jobDetailId(), String.class.getCanonicalName(), e.getMessage());
+        futures.remove(exe.jobDetailId());
       } finally {
         exe.setContext(null);
       }
-    }
-  }
-
-  private class Context implements OrderExecutionContext {
-    @Override
-    public <T> T getBean(Class<T> requiredType) {
-      return applicationContext.getBean(requiredType);
     }
   }
 }

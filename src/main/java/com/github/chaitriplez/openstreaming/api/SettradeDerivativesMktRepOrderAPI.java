@@ -19,7 +19,7 @@ public interface SettradeDerivativesMktRepOrderAPI {
   Call<Void> cancelOrder(
       @Path("brokerId") String brokerId,
       @Path("accountNo") String accountNo,
-      @Path("orderNo") String orderNo);
+      @Path("orderNo") Long orderNo);
 
   @PATCH("/api/seosd/v1/{brokerId}/mktrep/accounts/{accountNo}/cancel")
   Call<CancelMultipleOrdersResponse> cancelMultipleOrders(

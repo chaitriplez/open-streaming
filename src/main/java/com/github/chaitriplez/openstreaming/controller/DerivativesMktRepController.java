@@ -60,7 +60,7 @@ public class DerivativesMktRepController {
   ResponseEntity<Void> cancelOrder(
       @PathVariable("brokerId") String brokerId,
       @PathVariable("accountNo") String accountNo,
-      @PathVariable("orderNo") String orderNo) {
+      @PathVariable("orderNo") Long orderNo) {
     return ResponseEntityConverter.from(orderApi.cancelOrder(brokerId, accountNo, orderNo));
   }
 

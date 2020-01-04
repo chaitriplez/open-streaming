@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.2.RELEASE'
+    id 'org.springframework.boot' version '2.2.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
     id "com.cinnober.gradle.semver-git" version "2.5.0"
@@ -10,57 +10,57 @@ sourceCompatibility = '1.8'
 def resilience4jVersion = '1.2.0'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-	implementation 'com.squareup.retrofit2:retrofit:2.7.0'
-	implementation 'com.squareup.retrofit2:converter-jackson:2.7.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.0'
+    implementation 'com.squareup.retrofit2:converter-jackson:2.7.0'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-	implementation 'com.squareup.okhttp3:logging-interceptor:3.14.4'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.14.4'
 
-	implementation "io.springfox:springfox-swagger2:2.9.2"
-	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
-	implementation "io.springfox:springfox-bean-validators:2.9.2"
+    implementation "io.springfox:springfox-swagger2:2.9.2"
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+    implementation "io.springfox:springfox-bean-validators:2.9.2"
 
-	implementation "io.github.resilience4j:resilience4j-circuitbreaker:${resilience4jVersion}"
-	implementation "io.github.resilience4j:resilience4j-ratelimiter:${resilience4jVersion}"
-	implementation "io.github.resilience4j:resilience4j-retry:${resilience4jVersion}"
-	implementation "io.github.resilience4j:resilience4j-bulkhead:${resilience4jVersion}"
-	implementation "io.github.resilience4j:resilience4j-cache:${resilience4jVersion}"
-	implementation "io.github.resilience4j:resilience4j-timelimiter:${resilience4jVersion}"
-	implementation "io.github.resilience4j:resilience4j-retrofit:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-circuitbreaker:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-ratelimiter:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-retry:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-bulkhead:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-cache:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-timelimiter:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-retrofit:${resilience4jVersion}"
 
-	compileOnly 'org.projectlombok:lombok:1.18.10'
-	annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
-	runtimeOnly files('local-conf')
+    runtimeOnly files('local-conf')
 
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
 }
 
 bootJar.enabled = false
 jar.enabled = true
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 task copyDependencies(type: Copy) {
-	from configurations.runtimeClasspath
-	include '*.jar'
-	into "${buildDir}/dependencies"
+    from configurations.runtimeClasspath
+    include '*.jar'
+    into "${buildDir}/dependencies"
 }
 
 task initialDependencies {
-	doLast {
-		for(file in configurations.testRuntimeClasspath) {
-			println "File: ${file.name} ${file.size()/1000} kB"
-		}
-	}
+    doLast {
+        for (file in configurations.testRuntimeClasspath) {
+            println "File: ${file.name} ${file.size() / 1000} kB"
+        }
+    }
 }

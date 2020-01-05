@@ -27,13 +27,7 @@ public class OrderExecutionWorkerImpl implements OrderExecutionWorker, Applicati
 
   private final ConcurrentMap<Long, Future> futures = new ConcurrentHashMap<>();
   private ApplicationContext applicationContext;
-  private final OrderExecutionContext context =
-      new OrderExecutionContext() {
-        @Override
-        public <T> T getBean(Class<T> requiredType) {
-          return applicationContext.getBean(requiredType);
-        }
-      };
+  private final OrderExecutionContext context = clazz -> applicationContext.getBean(clazz);
 
   @Autowired private JobManager jobManager;
 
@@ -86,10 +80,11 @@ public class OrderExecutionWorkerImpl implements OrderExecutionWorker, Applicati
             break;
           case RETRY:
             jobManager.retryJobDetail(exe.jobDetailId(), result.getType(), result.getResult());
-            executor.schedule(
+            Future f = executor.schedule(
                 new Task(exe),
                 MIN_DELAY.toMillis() + result.getRetryDelay().toMillis(),
                 TimeUnit.MILLISECONDS);
+            futures.replace(exe.jobDetailId(), f);
             break;
         }
       } catch (Exception e) {

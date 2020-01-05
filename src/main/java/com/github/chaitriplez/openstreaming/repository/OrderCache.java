@@ -30,8 +30,8 @@ public class OrderCache {
     cache.setSymbol(o.getSymbol());
     cache.setActive(o.getBalanceQty() != 0);
     cache.setAccount(o.getAccountNo());
-    cache.setSide(o.getSide());
-    cache.setPosition(o.getPosition());
+    cache.setSide(o.getSide().toUpperCase());
+    cache.setPosition(o.getPosition().toUpperCase());
     cache.setPx(o.getPrice());
     cache.setQty(o.getQty());
     cache.setBalanceQty(o.getBalanceQty());

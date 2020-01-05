@@ -1,5 +1,10 @@
 package com.github.chaitriplez.openstreaming.component;
 
+@FunctionalInterface
 public interface OrderExecutionContext {
-  <T> T getBean(Class<T> requiredType);
+  Object getObject(Class<?> clazz);
+
+  default <T> T getBean(Class<T> clazz) {
+    return (T) getObject(clazz);
+  }
 }

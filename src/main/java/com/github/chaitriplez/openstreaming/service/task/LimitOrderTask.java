@@ -9,9 +9,11 @@ import com.github.chaitriplez.openstreaming.api.SettradeDerivativesInvestorOrder
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepOrderAPI;
 import com.github.chaitriplez.openstreaming.api.ValidityType;
 import com.github.chaitriplez.openstreaming.component.AbstractOrderExecution;
+import com.github.chaitriplez.openstreaming.component.OrderCacheManager;
 import com.github.chaitriplez.openstreaming.component.PullOrderWorker;
 import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties;
 import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties.UserType;
+import com.github.chaitriplez.openstreaming.repository.OrderCache;
 import com.github.chaitriplez.openstreaming.service.LimitOrderRequest;
 import java.io.IOException;
 import retrofit2.Call;
@@ -40,6 +42,7 @@ public class LimitOrderTask extends AbstractOrderExecution<LimitOrderRequest> {
     }
     PlaceOrderResponse orderResponse = response.body();
     Long orderNo = orderResponse.getOrderNo();
+    initOrderCache(orderNo);
     pullOrderWorker.monitor(orderNo);
 
     ExecutionResult result = new ExecutionResult();
@@ -83,5 +86,25 @@ public class LimitOrderTask extends AbstractOrderExecution<LimitOrderRequest> {
               .build();
       return api.placeOrder(osProp.getBrokerId(), osProp.getAccountNo(), place);
     }
+  }
+
+  private void initOrderCache(Long orderNo) {
+    OpenStreamingProperties osProp = context.getBean(OpenStreamingProperties.class);
+    OrderCacheManager orderCacheManager = context.getBean(OrderCacheManager.class);
+    OrderCache cache = new OrderCache();
+    cache.setOrderNo(orderNo);
+    cache.setSymbol(request.getSymbol());
+    cache.setActive(true);
+    cache.setAccount(osProp.getAccountNo());
+    cache.setSide(request.getSide().toString());
+    cache.setPosition(request.getPosition().toString());
+    cache.setPx(request.getPx());
+    cache.setQty(request.getQty());
+    cache.setBalanceQty(request.getQty());
+    cache.setMatchQty(0);
+    cache.setCancelQty(0);
+    cache.setStatus("-");
+    cache.setVersion(-1L);
+    orderCacheManager.processIfNewer(cache);
   }
 }

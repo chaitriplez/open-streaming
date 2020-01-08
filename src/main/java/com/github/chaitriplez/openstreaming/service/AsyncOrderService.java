@@ -24,4 +24,19 @@ public interface AsyncOrderService {
    * @return jobId
    */
   Long cancelOrderBySymbol(String symbol);
+
+  /**
+   * @param requests
+   * @return jobId
+   */
+  Long changePxQty(List<ChangePxQtyRequest> requests);
+
+  /**
+   * Replace current orders(cancel, change, place new order) with new quotes request.
+   *
+   * @param symbol
+   * @param quotes
+   * @return
+   */
+  Long quote(String symbol, List<QuoteRequest> quotes);
 }

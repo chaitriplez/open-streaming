@@ -13,6 +13,6 @@ import lombok.experimental.SuperBuilder;
 public class ChangeOrderRequest {
   Position newPosition;
   BigDecimal newPrice;
-  Long newVolume;
+  Integer newVolume;
   PriceType newPriceType;
 }

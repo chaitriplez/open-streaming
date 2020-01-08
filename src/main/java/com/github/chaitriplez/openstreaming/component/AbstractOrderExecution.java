@@ -12,12 +12,12 @@ public abstract class AbstractOrderExecution<T> implements OrderExecution {
   }
 
   @Override
-  public final void setContext(OrderExecutionContext context) {
+  public void setContext(OrderExecutionContext context) {
     this.context = context;
   }
 
   @Override
-  public final Long jobDetailId() {
+  public Long jobDetailId() {
     return jobDetailId;
   }
 

@@ -15,15 +15,24 @@ import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import io.github.resilience4j.retrofit.RateLimiterCallAdapter;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.OkHttpClient.Builder;
+import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.logging.HttpLoggingInterceptor.Level;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -37,17 +46,57 @@ public class APIConfig {
   @Autowired private OpenStreamingProperties osProp;
   @Autowired private RetrofitProperties retrofitProp;
 
-  @Bean
-  public AccessTokenSupplier accessToken() {
-    return new AccessTokenSupplier();
+  private static OkHttpClient.Builder ignoreCert(OkHttpClient.Builder builder) {
+    log.warn("Enable insecure connection. (Development Environment)");
+    try {
+      final X509TrustManager trustManager =
+          new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+
+            @Override
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+              return new X509Certificate[] {};
+            }
+          };
+      final TrustManager[] trustAllCerts = new TrustManager[] {trustManager};
+
+      final SSLContext sslContext = SSLContext.getInstance("SSL");
+      sslContext.init(null, trustAllCerts, new SecureRandom());
+      final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+      builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
+      builder.hostnameVerifier((hostname, session) -> true);
+    } catch (Exception e) {
+      log.warn("Cannot config insecure connection.", e);
+    }
+    return builder;
   }
 
   @Bean
-  public HttpLoggingInterceptor httpLogger() {
-    HttpLoggingInterceptor logger = new HttpLoggingInterceptor(new HttpLogger());
-    logger.setLevel(retrofitProp.getHttpLoggingLevel());
+  @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+  public OkHttpClient.Builder httpClientBuilder() {
+    OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-    return logger;
+    if (retrofitProp.getHttpLoggingLevel() != Level.NONE) {
+      HttpLoggingInterceptor logger = new HttpLoggingInterceptor(new HttpLogger());
+      logger.setLevel(retrofitProp.getHttpLoggingLevel());
+      builder.addInterceptor(logger);
+    }
+
+    if (retrofitProp.isHttpInsecure()) {
+      ignoreCert(builder);
+    }
+
+    return builder;
+  }
+
+  @Bean
+  public AccessTokenSupplier accessToken() {
+    return new AccessTokenSupplier();
   }
 
   @Bean
@@ -75,12 +124,11 @@ public class APIConfig {
   }
 
   @Bean
-  public Retrofit defaultRetrofit() {
-
+  public Retrofit preLoginRetrofit() {
     return new Retrofit.Builder()
         .baseUrl(osProp.getApiHost())
         .addConverterFactory(JacksonConverterFactory.create(mapper))
-        .client(new Builder().addInterceptor(httpLogger()).build())
+        .client(httpClientBuilder().build())
         .build();
   }
 
@@ -91,10 +139,7 @@ public class APIConfig {
         .addConverterFactory(JacksonConverterFactory.create(mapper))
         .addCallAdapterFactory(RateLimiterCallAdapter.of(queryRateLimiter()))
         .client(
-            new Builder()
-                .addInterceptor(new AccessTokenInterceptor(accessToken()))
-                .addInterceptor(httpLogger())
-                .build())
+            httpClientBuilder().addInterceptor(new AccessTokenInterceptor(accessToken())).build())
         .build();
   }
 
@@ -105,17 +150,14 @@ public class APIConfig {
         .addConverterFactory(JacksonConverterFactory.create(mapper))
         .addCallAdapterFactory(RateLimiterCallAdapter.of(orderRateLimiter()))
         .client(
-            new Builder()
-                .addInterceptor(new AccessTokenInterceptor(accessToken()))
-                .addInterceptor(httpLogger())
-                .build())
+            httpClientBuilder().addInterceptor(new AccessTokenInterceptor(accessToken())).build())
         .build();
   }
 
   @Bean
   @ConditionalOnProperty(prefix = "openstreaming", name = "login-type", havingValue = "TWO_LEGGED")
   public Settrade2LeggedLoginAPI settrade2LeggedLoginAPI() {
-    return defaultRetrofit().create(Settrade2LeggedLoginAPI.class);
+    return preLoginRetrofit().create(Settrade2LeggedLoginAPI.class);
   }
 
   @Bean
@@ -124,7 +166,7 @@ public class APIConfig {
       name = "login-type",
       havingValue = "THREE_LEGGED")
   public Settrade3LeggedLoginAPI settrade3LeggedLoginAPI() {
-    return defaultRetrofit().create(Settrade3LeggedLoginAPI.class);
+    return preLoginRetrofit().create(Settrade3LeggedLoginAPI.class);
   }
 
   @Bean

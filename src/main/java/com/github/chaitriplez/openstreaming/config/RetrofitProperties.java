@@ -12,6 +12,8 @@ import org.springframework.boot.convert.DurationUnit;
 @ConfigurationProperties(prefix = "openstreaming.retrofit")
 public class RetrofitProperties {
 
+  private boolean httpInsecure = false;
+
   private HttpLoggingInterceptor.Level httpLoggingLevel = Level.NONE;
 
   private int upstreamQueryLimit = 5;

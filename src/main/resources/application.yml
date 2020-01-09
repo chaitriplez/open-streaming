@@ -31,6 +31,7 @@ openstreaming:
     deny: # pattern
     deny-status: 403 # Forbidden
   retrofit:
+    http-insecure: false
     http-logging-level: BASIC # NONE, BASIC, HEADERS, BODY
     upstream-query-limit: 5
     upstream-query-refresh-period: 1s

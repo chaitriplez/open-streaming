@@ -6,7 +6,7 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 @Data
-public class AccessTokenSupplier implements Supplier<String> {
+public class AuthorizationSupplier implements Supplier<String> {
 
   private String authorization;
 

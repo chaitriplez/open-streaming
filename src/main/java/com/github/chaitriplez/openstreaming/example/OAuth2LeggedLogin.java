@@ -5,7 +5,7 @@ import com.github.chaitriplez.openstreaming.api.AccessToken2LeggedRequest;
 import com.github.chaitriplez.openstreaming.api.AccessTokenResponse;
 import com.github.chaitriplez.openstreaming.api.Settrade2LeggedLoginAPI;
 import com.github.chaitriplez.openstreaming.api.SettradeUserAPI;
-import com.github.chaitriplez.openstreaming.util.AccessTokenInterceptor;
+import com.github.chaitriplez.openstreaming.util.AuthorizationHeaderInterceptor;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.function.Supplier;
@@ -69,7 +69,7 @@ public class OAuth2LeggedLogin {
               .client(
                   new OkHttpClient()
                       .newBuilder()
-                      .addInterceptor(new AccessTokenInterceptor(authorization))
+                      .addInterceptor(new AuthorizationHeaderInterceptor(authorization))
                       .build())
               .build()
               .create(SettradeUserAPI.class);

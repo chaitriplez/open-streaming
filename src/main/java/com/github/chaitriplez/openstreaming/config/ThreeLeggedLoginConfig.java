@@ -5,7 +5,7 @@ import com.github.chaitriplez.openstreaming.api.AccessToken3LeggedRequest;
 import com.github.chaitriplez.openstreaming.api.AccessTokenResponse;
 import com.github.chaitriplez.openstreaming.api.ErrorResponse;
 import com.github.chaitriplez.openstreaming.api.Settrade3LeggedLoginAPI;
-import com.github.chaitriplez.openstreaming.util.AccessTokenSupplier;
+import com.github.chaitriplez.openstreaming.util.AuthorizationSupplier;
 import com.github.chaitriplez.openstreaming.util.OpenStreamingConstants;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -38,7 +38,7 @@ public class ThreeLeggedLoginConfig {
   @Autowired private Settrade3LeggedLoginAPI loginAPI;
   @Autowired private OpenStreamingProperties osProp;
   @Autowired private ThreeLeggedLoginProperties loginProp;
-  @Autowired private AccessTokenSupplier accessTokenSupplier;
+  @Autowired private AuthorizationSupplier authorizationSupplier;
   @Autowired private LoginUserInfo userInfo;
 
   @PostConstruct
@@ -122,7 +122,7 @@ public class ThreeLeggedLoginConfig {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
-    accessTokenSupplier.setAuthorization("Bearer " + atRes.getAccessToken());
+    authorizationSupplier.setAuthorization("Bearer " + atRes.getAccessToken());
     userInfo.setLogin(true);
     userInfo.setBrokerId(atRes.getBrokerId());
     userInfo.setUsername(atRes.getAuthenticatedUserid());

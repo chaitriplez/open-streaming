@@ -8,8 +8,8 @@ import com.github.chaitriplez.openstreaming.api.SettradeDerivativesInvestorQuery
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepOrderAPI;
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepQueryAPI;
 import com.github.chaitriplez.openstreaming.api.SettradeUserAPI;
-import com.github.chaitriplez.openstreaming.util.AccessTokenInterceptor;
-import com.github.chaitriplez.openstreaming.util.AccessTokenSupplier;
+import com.github.chaitriplez.openstreaming.util.AuthorizationHeaderInterceptor;
+import com.github.chaitriplez.openstreaming.util.AuthorizationSupplier;
 import com.github.chaitriplez.openstreaming.util.HttpLogger;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
@@ -95,8 +95,8 @@ public class APIConfig {
   }
 
   @Bean
-  public AccessTokenSupplier accessToken() {
-    return new AccessTokenSupplier();
+  public AuthorizationSupplier authorization() {
+    return new AuthorizationSupplier();
   }
 
   @Bean
@@ -139,7 +139,9 @@ public class APIConfig {
         .addConverterFactory(JacksonConverterFactory.create(mapper))
         .addCallAdapterFactory(RateLimiterCallAdapter.of(queryRateLimiter()))
         .client(
-            httpClientBuilder().addInterceptor(new AccessTokenInterceptor(accessToken())).build())
+            httpClientBuilder()
+                .addInterceptor(new AuthorizationHeaderInterceptor(authorization()))
+                .build())
         .build();
   }
 
@@ -150,7 +152,9 @@ public class APIConfig {
         .addConverterFactory(JacksonConverterFactory.create(mapper))
         .addCallAdapterFactory(RateLimiterCallAdapter.of(orderRateLimiter()))
         .client(
-            httpClientBuilder().addInterceptor(new AccessTokenInterceptor(accessToken())).build())
+            httpClientBuilder()
+                .addInterceptor(new AuthorizationHeaderInterceptor(authorization()))
+                .build())
         .build();
   }
 

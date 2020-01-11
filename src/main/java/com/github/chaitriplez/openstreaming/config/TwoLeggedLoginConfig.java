@@ -3,7 +3,7 @@ package com.github.chaitriplez.openstreaming.config;
 import com.github.chaitriplez.openstreaming.api.AccessToken2LeggedRequest;
 import com.github.chaitriplez.openstreaming.api.AccessTokenResponse;
 import com.github.chaitriplez.openstreaming.api.Settrade2LeggedLoginAPI;
-import com.github.chaitriplez.openstreaming.util.AccessTokenSupplier;
+import com.github.chaitriplez.openstreaming.util.AuthorizationSupplier;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -27,7 +27,7 @@ public class TwoLeggedLoginConfig {
   @Autowired private Settrade2LeggedLoginAPI loginAPI;
   @Autowired private OpenStreamingProperties osProp;
   @Autowired private TwoLeggedLoginProperties loginProp;
-  @Autowired private AccessTokenSupplier accessTokenSupplier;
+  @Autowired private AuthorizationSupplier authorizationSupplier;
 
   @Bean
   public LoginUserInfo processLogin() throws IOException {
@@ -50,7 +50,7 @@ public class TwoLeggedLoginConfig {
         || (!Objects.equals(atRes.getAuthenticatedUserid(), osProp.getUsername()))) {
       throw new IllegalStateException("Login fail: Invalid broker/username");
     }
-    accessTokenSupplier.setAuthorization("Bearer " + atRes.getAccessToken());
+    authorizationSupplier.setAuthorization("Bearer " + atRes.getAccessToken());
 
     LoginUserInfo userInfo = new LoginUserInfo();
     userInfo.setLogin(true);

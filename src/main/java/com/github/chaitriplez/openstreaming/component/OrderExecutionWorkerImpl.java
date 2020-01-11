@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.PreDestroy;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -30,6 +31,11 @@ public class OrderExecutionWorkerImpl implements OrderExecutionWorker, Applicati
   private final OrderExecutionContext context = clazz -> applicationContext.getBean(clazz);
 
   @Autowired private JobManager jobManager;
+
+  @PreDestroy
+  public void destroy() {
+    cancelAll();
+  }
 
   @Override
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

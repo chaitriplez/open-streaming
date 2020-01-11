@@ -53,6 +53,18 @@ public class OrderExecutionWorkerImpl implements OrderExecutionWorker, Applicati
     return false;
   }
 
+  @Override
+  public void cancelAll() {
+    log.info("Cancel all queuing/running task...");
+    futures.forEach(
+        (aLong, future) -> {
+          future.cancel(true);
+          jobManager.cancelJobDetail(aLong);
+        });
+    futures.clear();
+    log.info("Cancel all queuing/running task completed.");
+  }
+
   private class Task implements Runnable {
 
     private final OrderExecution exe;
@@ -80,10 +92,11 @@ public class OrderExecutionWorkerImpl implements OrderExecutionWorker, Applicati
             break;
           case RETRY:
             jobManager.retryJobDetail(exe.jobDetailId(), result.getType(), result.getResult());
-            Future f = executor.schedule(
-                new Task(exe),
-                MIN_DELAY.toMillis() + result.getRetryDelay().toMillis(),
-                TimeUnit.MILLISECONDS);
+            Future f =
+                executor.schedule(
+                    new Task(exe),
+                    MIN_DELAY.toMillis() + result.getRetryDelay().toMillis(),
+                    TimeUnit.MILLISECONDS);
             futures.replace(exe.jobDetailId(), f);
             break;
         }

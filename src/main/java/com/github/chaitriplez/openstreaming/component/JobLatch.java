@@ -6,4 +6,6 @@ public interface JobLatch {
   CountDownLatch get(Long jobId);
 
   CountDownLatch create(Long jobId, int count);
+
+  void clear();
 }

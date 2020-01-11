@@ -15,6 +15,21 @@ public class OrderCacheRepositorySync implements OrderCacheRepository {
   @Autowired private OrderCacheRepository orderCacheRepository;
 
   @Override
+  public List<OrderCache> findBySymbol(String symbol) {
+    return orderCacheRepository.findBySymbol(symbol);
+  }
+
+  @Override
+  public List<OrderCache> findByActive(boolean active) {
+    return orderCacheRepository.findByActive(active);
+  }
+
+  @Override
+  public List<OrderCache> findBySymbolAndActive(String symbol, boolean active) {
+    return orderCacheRepository.findBySymbolAndActive(symbol, active);
+  }
+
+  @Override
   public synchronized List<OrderCache> findBySymbolAndActiveIsTrue(String symbol) {
     return orderCacheRepository.findBySymbolAndActiveIsTrue(symbol);
   }

@@ -4,4 +4,6 @@ public interface OrderExecutionWorker {
   void submit(OrderExecution execution);
 
   boolean cancel(Long jobDetailId);
+
+  void cancelAll();
 }

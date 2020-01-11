@@ -34,7 +34,7 @@ public class ChangePxQtyTask extends AbstractOrderExecution<ChangePxQtyRequest> 
     ExecutionResult result = new ExecutionResult();
     result.setStatus(ExecutionStatus.SUCCESS);
     result.setType(String.class.getCanonicalName());
-    result.setResult("Success");
+    result.setResult("Request summit.");
     return result;
   }
 

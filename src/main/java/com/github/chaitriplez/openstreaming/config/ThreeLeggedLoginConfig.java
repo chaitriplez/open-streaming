@@ -38,7 +38,7 @@ public class ThreeLeggedLoginConfig {
   @Autowired private Settrade3LeggedLoginAPI loginAPI;
   @Autowired private OpenStreamingProperties osProp;
   @Autowired private ThreeLeggedLoginProperties loginProp;
-  @Autowired private AuthorizationSupplier authorizationSupplier;
+  @Autowired private AuthorizationSupplier authorization;
   @Autowired private LoginUserInfo userInfo;
 
   @PostConstruct
@@ -122,7 +122,7 @@ public class ThreeLeggedLoginConfig {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
-    authorizationSupplier.setAuthorization("Bearer " + atRes.getAccessToken());
+    authorization.setAuthorization("Bearer " + atRes.getAccessToken());
     userInfo.setLogin(true);
     userInfo.setBrokerId(atRes.getBrokerId());
     userInfo.setUsername(atRes.getAuthenticatedUserid());

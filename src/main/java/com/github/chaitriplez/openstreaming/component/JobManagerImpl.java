@@ -139,6 +139,17 @@ public class JobManagerImpl implements JobManager {
     updateJobDetail(JobDetailStatus.PROCESSING, jobDetailId, canonicalName, response);
   }
 
+  @Override
+  public void clearDatabaseAndResetSequence() {
+    log.info("Clear database job...");
+    jobRepository.deleteAll();
+    jobDetailRepository.deleteAll();
+    jobLatch.clear();
+    jobIdGenerator.set(0);
+    jobDetailIdGenerator.set(0);
+    log.info("Clear database job completed.");
+  }
+
   private Optional<Tuple<Job, List<JobDetail>>> doFind(Long jobId) {
     Optional<Job> optJob = jobRepository.findById(jobId);
     if (!optJob.isPresent()) {

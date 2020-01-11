@@ -26,4 +26,6 @@ public interface JobManager {
   void failJobDetail(Long jobDetailId, String canonicalName, String response);
 
   void retryJobDetail(Long jobDetailId, String canonicalName, String response);
+
+  void clearDatabaseAndResetSequence();
 }

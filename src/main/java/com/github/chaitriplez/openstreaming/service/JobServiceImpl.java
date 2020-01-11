@@ -51,4 +51,10 @@ public class JobServiceImpl implements JobService {
 
     return jobManager.findJob(jobId).get();
   }
+
+  @Override
+  public void cancelAllJobAndResetSequence() {
+    orderExecutionWorker.cancelAll();
+    jobManager.clearDatabaseAndResetSequence();
+  }
 }

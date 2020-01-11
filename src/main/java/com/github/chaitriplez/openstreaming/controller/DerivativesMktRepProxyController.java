@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Setter
 @RestController
 @ConditionalOnProperty(prefix = "openstreaming", name = "user-type", havingValue = "MKT_REP")
-public class DerivativesMktRepController {
+public class DerivativesMktRepProxyController {
 
   @Autowired private SettradeDerivativesMktRepQueryAPI queryApi;
   @Autowired private SettradeDerivativesMktRepOrderAPI orderApi;

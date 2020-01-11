@@ -27,7 +27,7 @@ public class TwoLeggedLoginConfig {
   @Autowired private Settrade2LeggedLoginAPI loginAPI;
   @Autowired private OpenStreamingProperties osProp;
   @Autowired private TwoLeggedLoginProperties loginProp;
-  @Autowired private AuthorizationSupplier authorizationSupplier;
+  @Autowired private AuthorizationSupplier authorization;
 
   @Bean
   public LoginUserInfo processLogin() throws IOException {
@@ -50,7 +50,7 @@ public class TwoLeggedLoginConfig {
         || (!Objects.equals(atRes.getAuthenticatedUserid(), osProp.getUsername()))) {
       throw new IllegalStateException("Login fail: Invalid broker/username");
     }
-    authorizationSupplier.setAuthorization("Bearer " + atRes.getAccessToken());
+    authorization.setAuthorization("Bearer " + atRes.getAccessToken());
 
     LoginUserInfo userInfo = new LoginUserInfo();
     userInfo.setLogin(true);

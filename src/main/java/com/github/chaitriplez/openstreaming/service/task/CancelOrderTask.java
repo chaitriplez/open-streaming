@@ -47,7 +47,7 @@ public class CancelOrderTask extends AbstractOrderExecution<Long> {
     ExecutionResult result = new ExecutionResult();
     result.setStatus(ExecutionStatus.SUCCESS);
     result.setType(String.class.getCanonicalName());
-    result.setResult("Cancel success");
+    result.setResult("Request summit.");
     return result;
   }
 

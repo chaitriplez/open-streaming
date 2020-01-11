@@ -11,6 +11,12 @@ public interface AsyncOrderService {
   Long limitOrder(List<LimitOrderRequest> requests);
 
   /**
+   * @param orderNos
+   * @return jobId
+   */
+  Long cancelOrder(List<Long> orderNos);
+
+  /**
    * Cancel active order in order cache
    *
    * @return jobId

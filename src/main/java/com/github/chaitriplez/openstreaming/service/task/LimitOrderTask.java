@@ -47,8 +47,8 @@ public class LimitOrderTask extends AbstractOrderExecution<LimitOrderRequest> {
 
     ExecutionResult result = new ExecutionResult();
     result.setStatus(ExecutionStatus.SUCCESS);
-    result.setType(PlaceOrderResponse.class.getCanonicalName());
-    result.setResult(mapper.writeValueAsString(orderResponse));
+    result.setType(Long.class.getCanonicalName());
+    result.setResult(orderResponse.getOrderNo().toString());
     return result;
   }
 

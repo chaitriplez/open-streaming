@@ -12,4 +12,6 @@ public interface JobService {
   Tuple<Job, List<JobDetail>> waitJob(Long jobId, Duration timeout);
 
   Tuple<Job, List<JobDetail>> cancelJob(Long jobId);
+
+  void cancelAllJobAndResetSequence();
 }

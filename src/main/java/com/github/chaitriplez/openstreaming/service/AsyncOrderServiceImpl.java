@@ -68,6 +68,11 @@ public class AsyncOrderServiceImpl implements AsyncOrderService {
   }
 
   @Override
+  public Long cancelOrder(List<Long> orderNos) {
+    return doCancel(orderNos, "cancelOrder:" + orderNos.toString());
+  }
+
+  @Override
   public Long cancelAllOrder() {
     List<Long> orders =
         orderCacheRepository.findByActiveIsTrue().stream()

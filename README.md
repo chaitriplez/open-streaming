@@ -1,4 +1,4 @@
-# Open Streaming
+# Open Streaming [![Build Status](https://travis-ci.org/chaitriplez/open-streaming.svg?branch=master)](https://travis-ci.org/chaitriplez/open-streaming)
 
 ## How to build
 
@@ -14,9 +14,9 @@ $ gradle.bat bootRun
 - Build and run with docker
 
 ```shell script
-$ docker build -t chaitriplez/open-streaming:latest .
+$ docker build -t open-streaming .
 # Example
-$ docker run --rm -e SPRING_PROFILES_ACTIVE=investor -v ${PWD}/application-investor.yml:/opt/script/open-streaming/conf/application-investor.yml -p 8080:8080 chaitriplez/open-streaming:latest
+$ docker run --rm -e SPRING_PROFILES_ACTIVE=investor -v ${PWD}/application-investor.yml:/opt/script/open-streaming/conf/application-investor.yml -p 8080:8080 open-streaming
 ```
 
 ## Features
@@ -33,6 +33,7 @@ $ docker run --rm -e SPRING_PROFILES_ACTIVE=investor -v ${PWD}/application-inves
 - [x] Cancel all order
 - [x] Cancel order by symbol
 - [x] Quote
+- [ ] Order push
 - [ ] Close all open position
 - [ ] Trailing stop order
 - [ ] Bracket order

@@ -1,9 +1,18 @@
-language: java
-
 services:
   - docker
 
-before_install:
-  - docker build -t chaitriplez/open-streaming:latest .
-  - docker ps -a
+script:
+  - docker build -t open-streaming .
   - docker images
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker tag open-streaming $DOCKER_USERNAME/open-streaming:latest
+  - docker push $DOCKER_USERNAME/open-streaming:latest
+
+before_deploy:
+  - docker tag open-streaming $DOCKER_USERNAME/open-streaming:$TRAVIS_TAG
+
+deploy:
+  provider: script
+  script: docker push $DOCKER_USERNAME/open-streaming:$TRAVIS_TAG
+  on:
+    tags: true

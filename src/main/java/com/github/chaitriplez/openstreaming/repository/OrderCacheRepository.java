@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 public interface OrderCacheRepository extends CrudRepository<OrderCache, Long> {
 
   List<OrderCache> findBySymbol(String symbol);
+
   List<OrderCache> findByActive(boolean active);
+
   List<OrderCache> findBySymbolAndActive(String symbol, boolean active);
 
   List<OrderCache> findBySymbolAndActiveIsTrue(String symbol);

@@ -27,7 +27,10 @@ public class JobController {
   @GetMapping("/api-os/job/v1/jobs/{jobId}")
   public Tuple<Job, List<JobDetail>> job(
       @PathVariable("jobId") Long jobId,
-      @ApiParam(name = "wait", value = "Maximum waiting time for job done in millisecond(s).", example = "0")
+      @ApiParam(
+              name = "wait",
+              value = "Maximum waiting time for job done in millisecond(s).",
+              example = "0")
           @RequestParam(name = "wait", required = false)
           Long wait) {
     if (wait == null || wait == 0) {

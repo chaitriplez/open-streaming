@@ -7,10 +7,9 @@ plugins {
 
 group = 'com.github.chaitriplez'
 sourceCompatibility = '1.8'
-def resilience4jVersion = '1.2.0'
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -26,16 +25,11 @@ dependencies {
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
     implementation "io.springfox:springfox-bean-validators:2.9.2"
 
-    implementation "io.github.resilience4j:resilience4j-circuitbreaker:${resilience4jVersion}"
-    implementation "io.github.resilience4j:resilience4j-ratelimiter:${resilience4jVersion}"
-    implementation "io.github.resilience4j:resilience4j-retry:${resilience4jVersion}"
-    implementation "io.github.resilience4j:resilience4j-bulkhead:${resilience4jVersion}"
-    implementation "io.github.resilience4j:resilience4j-cache:${resilience4jVersion}"
-    implementation "io.github.resilience4j:resilience4j-timelimiter:${resilience4jVersion}"
-    implementation "io.github.resilience4j:resilience4j-retrofit:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-ratelimiter:1.2.0"
+    implementation "io.github.resilience4j:resilience4j-retrofit:1.2.0"
 
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.2'
-    
+
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
 

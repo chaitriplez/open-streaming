@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package settrade.openapi.protobuf.v1;
+
+import "google/type/money.proto";
+import "google/type/date.proto";
+import "google/type/timeofday.proto";
+
+option java_multiple_files = true;
+option java_outer_classname = "OrderEquityV1Proto";
+option java_package = "com.settrade.openapi.protobuf.v1";
+
+// Topic: proto/ua/_broker/<account_no>/_front/ordereqv1
+//
+// Equity order information
+message OrderEquityV1 {
+    // Order version. Greater version means more recent order
+    int32 version = 1;
+    // Settrade Order No.
+    string order_no = 2;
+    // External order no. in case of using integrated account, otherwise blank
+    string ext_order_no = 3;
+    // Subscribed account no.
+    string account_no = 4;
+    // The time the order is submitted
+    google.type.TimeOfDay entry_time = 5;
+    // Order Trade Date
+    google.type.Date trade_date = 6;
+    // Order Symbol
+    string symbol = 7;
+    // True if this is an NVDR order, false otherwise
+    bool is_nvdr = 8;
+    // Order Price
+    google.type.Money price = 9;
+    // Order Price Type - Limit, ATO, ATC, Market (MP-MKT), Special Market (MP), Market to limit (MP-MTL)
+    PriceType price_type = 10;
+    // Side - Buy or Sell
+    BuySell side = 11;
+    // Order Volume
+    int64 volume = 12;
+    // Order Matched Volume
+    int64 matched_volume = 13;
+    // Order Balance Volume
+    // Balance Volume = Order Volume - Matched Volume - Cancelled Volume
+    int64 balance_volume = 14;
+    // Order Cancelled Volume
+    int64 cancelled_volume = 15;
+    // Order Status
+    string status = 16;
+    // True if available for cancel, false otherwise
+    bool can_cancel = 17;
+    // True if available for change nvdr, false otherwise
+    bool can_change = 18;
+    // True if available for change price/volume, false otherwise
+    bool can_change_price_vol = 19;
+
+    enum PriceType {
+        UNDEFINED_PRICE_TYPE = 0;
+        LIMIT = 1;
+        ATO = 2;
+        ATC = 3;
+        MARKET = 4;
+        SPECIAL_MARKET = 5;
+        MARKET_TO_LIMIT = 6;
+    }
+
+    enum BuySell {
+        UNDEFINED_BUYSELL = 0;
+        BUY = 1;
+        SELL = 2;
+    }
+}

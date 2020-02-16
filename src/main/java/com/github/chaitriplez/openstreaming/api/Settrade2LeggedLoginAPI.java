@@ -7,9 +7,15 @@ import retrofit2.http.Path;
 
 public interface Settrade2LeggedLoginAPI {
 
-  @POST("/api/oam/v1/{brokerId}/broker-apps/{appId}/login")
+  @POST("/api/oam/v1/{brokerId}/broker-apps/{appCode}/login")
   Call<AccessTokenResponse> getAccessToken(
       @Path("brokerId") String brokerId,
-      @Path("appId") String appId,
+      @Path("appCode") String appCode,
       @Body AccessToken2LeggedRequest accessTokenRequest);
+
+  @POST("/api/oam/v1/{brokerId}/broker-apps/{appCode}/refresh-token")
+  Call<AccessTokenResponse> getRefreshToken(
+      @Path("brokerId") String brokerId,
+      @Path("appCode") String appCode,
+      @Body RefreshToken2LeggedRequest refreshTokenRequest);
 }

@@ -1,6 +1,5 @@
 package com.github.chaitriplez.openstreaming.service.task;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.chaitriplez.openstreaming.api.InvestorPlaceOrderRequest;
 import com.github.chaitriplez.openstreaming.api.PlaceOrderRequest;
 import com.github.chaitriplez.openstreaming.api.PlaceOrderResponse;
@@ -10,7 +9,6 @@ import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepOrderAP
 import com.github.chaitriplez.openstreaming.api.ValidityType;
 import com.github.chaitriplez.openstreaming.component.AbstractOrderExecution;
 import com.github.chaitriplez.openstreaming.component.OrderCacheManager;
-import com.github.chaitriplez.openstreaming.component.PullOrderWorker;
 import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties;
 import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties.UserType;
 import com.github.chaitriplez.openstreaming.repository.OrderCache;
@@ -27,9 +25,6 @@ public class LimitOrderTask extends AbstractOrderExecution<LimitOrderRequest> {
 
   @Override
   public ExecutionResult execute() throws IOException {
-    PullOrderWorker pullOrderWorker = context.getBean(PullOrderWorker.class);
-    ObjectMapper mapper = context.getBean(ObjectMapper.class);
-
     Call<PlaceOrderResponse> call = placeOrder();
 
     Response<PlaceOrderResponse> response = call.execute();
@@ -43,7 +38,6 @@ public class LimitOrderTask extends AbstractOrderExecution<LimitOrderRequest> {
     PlaceOrderResponse orderResponse = response.body();
     Long orderNo = orderResponse.getOrderNo();
     initOrderCache(orderNo);
-    pullOrderWorker.monitor(orderNo);
 
     ExecutionResult result = new ExecutionResult();
     result.setStatus(ExecutionStatus.SUCCESS);

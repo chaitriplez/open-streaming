@@ -6,6 +6,7 @@ import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepQueryAP
 import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties;
 import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties.UserType;
 import com.github.chaitriplez.openstreaming.repository.OrderCache;
+import com.github.chaitriplez.openstreaming.util.OrderCacheConverter;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -28,7 +29,7 @@ import retrofit2.Response;
 @Setter
 @EnableConfigurationProperties(PullOrderProperties.class)
 @Component
-public class PullOrderWorkerImpl implements PullOrderWorker {
+public class PullOrderWorkerImpl implements PullOrderWorker, OrderCacheListener {
 
   private final ConcurrentMap<Long, ScheduledFuture> monitorOrders = new ConcurrentHashMap<>();
   private final ScheduledExecutorService executorService =
@@ -57,28 +58,37 @@ public class PullOrderWorkerImpl implements PullOrderWorker {
   }
 
   @Override
+  public void onChange(OrderCache cache) {
+    if (cache.getBalanceQty() != 0) {
+      monitor(cache.getOrderNo());
+    } else {
+      stopMonitor(cache.getOrderNo());
+    }
+  }
+
+  @Override
   public void monitor(Long orderNo) {
-    Runnable task = new Task(orderNo);
     monitorOrders.computeIfAbsent(
         orderNo,
-        key ->
-            executorService.scheduleWithFixedDelay(
-                task,
-                pullOrderProp.getCheckInterval().toMillis(),
-                pullOrderProp.getCheckInterval().toMillis(),
-                TimeUnit.MILLISECONDS));
+        key -> {
+          log.info("Start monitor orderNo {}", orderNo);
+          return executorService.scheduleWithFixedDelay(
+              new Task(orderNo),
+              pullOrderProp.getCheckInterval().toMillis(),
+              pullOrderProp.getCheckInterval().toMillis(),
+              TimeUnit.MILLISECONDS);
+        });
   }
 
   @Override
   public void stopMonitor(Long orderNo) {
-    doStopMonitor(orderNo);
-  }
-
-  private void doStopMonitor(Long orderNo) {
-    ScheduledFuture future = monitorOrders.remove(orderNo);
-    if (future != null) {
-      future.cancel(false);
-    }
+    monitorOrders.computeIfPresent(
+        orderNo,
+        (lOrderNo, scheduledFuture) -> {
+          log.info("Stop monitor orderNo {}", orderNo);
+          scheduledFuture.cancel(false);
+          return null;
+        });
   }
 
   private class Task implements Runnable {
@@ -104,17 +114,13 @@ public class PullOrderWorkerImpl implements PullOrderWorker {
         if (response.code() == HttpStatus.UNAUTHORIZED.value()
             || response.code() == HttpStatus.FORBIDDEN.value()) {
           log.info("Unauthorized/Forbidden stop monitor:{}", orderNo);
-          doStopMonitor(orderNo);
+          stopMonitor(orderNo);
         }
         return;
       }
       OrderResponse orderResponse = response.body();
-      OrderCache cache = OrderCache.from(orderResponse);
-      boolean update = orderCacheManager.processIfNewer(cache);
-      if (update && cache.getBalanceQty() == 0) {
-        log.info("No balance stop monitor:{}", orderNo);
-        doStopMonitor(orderNo);
-      }
+      OrderCache cache = OrderCacheConverter.from(orderResponse);
+      orderCacheManager.processIfNewer(cache);
     }
 
     private Call<OrderResponse> getOrder(Long orderNo) {

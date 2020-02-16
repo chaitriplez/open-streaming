@@ -1,7 +1,8 @@
 plugins {
     id 'org.springframework.boot' version '2.2.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-    id 'java'
+    id "java"
+    id "com.google.protobuf" version "0.8.11"
     id "com.cinnober.gradle.semver-git" version "2.5.0"
 }
 
@@ -25,10 +26,12 @@ dependencies {
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
     implementation "io.springfox:springfox-bean-validators:2.9.2"
 
-    implementation "io.github.resilience4j:resilience4j-ratelimiter:1.2.0"
-    implementation "io.github.resilience4j:resilience4j-retrofit:1.2.0"
+    implementation 'io.github.resilience4j:resilience4j-ratelimiter:1.2.0'
+    implementation 'io.github.resilience4j:resilience4j-retrofit:1.2.0'
 
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.2'
+    implementation 'com.google.protobuf:protobuf-java:3.11.1'
+    implementation 'com.google.api.grpc:proto-google-common-protos:1.17.0'
 
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
@@ -45,6 +48,13 @@ jar.enabled = true
 
 test {
     useJUnitPlatform()
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.11.1"
+    }
+    generatedFilesBaseDir = "${projectDir}/src"
 }
 
 task copyDependencies(type: Copy) {

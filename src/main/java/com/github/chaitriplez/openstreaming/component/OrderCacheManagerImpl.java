@@ -9,6 +9,7 @@ import com.github.chaitriplez.openstreaming.controller.CallFailException;
 import com.github.chaitriplez.openstreaming.repository.OrderCache;
 import com.github.chaitriplez.openstreaming.repository.OrderCacheRepository;
 import com.github.chaitriplez.openstreaming.util.OpenStreamingConstants;
+import com.github.chaitriplez.openstreaming.util.OrderCacheConverter;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,7 +58,9 @@ public class OrderCacheManagerImpl implements OrderCacheManager {
           OpenStreamingConstants.REMOTE_CALL_ERROR_CODE);
     }
     if (response.isSuccessful()) {
-      response.body().forEach(orderResponse -> processIfNewer(OrderCache.from(orderResponse)));
+      response
+          .body()
+          .forEach(orderResponse -> processIfNewer(OrderCacheConverter.from(orderResponse)));
     } else {
       log.warn("Cannot list order {}", response);
       throw new CallFailException(

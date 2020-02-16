@@ -31,7 +31,7 @@ public class OAuth2LeggedLogin {
 
     final String API_HOST = properties.getProperty("API_HOST");
     final String BROKER_ID = properties.getProperty("BROKER_ID");
-    final String APP_ID = properties.getProperty("APP_ID");
+    final String APP_CODE = properties.getProperty("APP_CODE");
     final String API_KEY = properties.getProperty("API_KEY");
     final String API_SECRET = properties.getProperty("API_SECRET");
 
@@ -47,7 +47,7 @@ public class OAuth2LeggedLogin {
       AccessToken2LeggedRequest tokenReq =
           AccessToken2LeggedRequest.builder().params("").apiKey(API_KEY).build();
       tokenReq.sign(API_SECRET);
-      Call<AccessTokenResponse> call = loginAPI.getAccessToken(BROKER_ID, APP_ID, tokenReq);
+      Call<AccessTokenResponse> call = loginAPI.getAccessToken(BROKER_ID, APP_CODE, tokenReq);
       log.info("Request Info: {}", call.request());
 
       Response<AccessTokenResponse> result = call.execute();

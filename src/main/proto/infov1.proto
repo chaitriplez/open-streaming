@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package settrade.openapi.protobuf.v1;
+
+import "google/type/money.proto";
+
+option java_multiple_files = true;
+option java_outer_classname = "InfoV1Proto";
+option java_package = "com.settrade.openapi.protobuf.v1";
+
+// Topic: proto/topic/infov1/<symbol>
+//
+// Today's general instrument information
+message InfoV1 {
+    // Subscribed symbol
+    string symbol = 1;
+    // Highest price
+    google.type.Money high = 2;
+    // Lowest price
+    google.type.Money low = 3;
+    // Current price
+    google.type.Money last = 4;
+    // Total traded volume
+    int64 total_volume = 5;
+}

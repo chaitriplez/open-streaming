@@ -1,6 +1,5 @@
 package com.github.chaitriplez.openstreaming.repository;
 
-import com.github.chaitriplez.openstreaming.api.OrderResponse;
 import java.math.BigDecimal;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -23,22 +22,4 @@ public class OrderCache {
   private Integer cancelQty;
   private String status;
   private Long version;
-
-  public static OrderCache from(OrderResponse o) {
-    OrderCache cache = new OrderCache();
-    cache.setOrderNo(o.getOrderNo());
-    cache.setSymbol(o.getSymbol());
-    cache.setActive(o.getBalanceQty() != 0);
-    cache.setAccount(o.getAccountNo());
-    cache.setSide(o.getSide().toUpperCase());
-    cache.setPosition(o.getPosition().toUpperCase());
-    cache.setPx(o.getPrice());
-    cache.setQty(o.getQty());
-    cache.setBalanceQty(o.getBalanceQty());
-    cache.setMatchQty(o.getMatchQty());
-    cache.setCancelQty(o.getCancelQty());
-    cache.setStatus(o.getStatus());
-    cache.setVersion(o.getVersion());
-    return cache;
-  }
 }

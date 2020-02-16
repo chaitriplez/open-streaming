@@ -36,7 +36,7 @@ public class TwoLeggedLoginConfig {
         AccessToken2LeggedRequest.builder().apiKey(loginProp.getApiKey()).params("").build();
     tokenReq.sign(loginProp.getApiSecret());
     Call<AccessTokenResponse> call =
-        loginAPI.getAccessToken(osProp.getBrokerId(), loginProp.getAppId(), tokenReq);
+        loginAPI.getAccessToken(osProp.getBrokerId(), loginProp.getAppCode(), tokenReq);
 
     log.info("Request access token...");
     Response<AccessTokenResponse> response = call.execute();

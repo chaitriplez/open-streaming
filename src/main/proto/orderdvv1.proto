@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package settrade.openapi.protobuf.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/type/money.proto";
+
+option java_multiple_files = true;
+option java_outer_classname = "OrderDerivV1Proto";
+option java_package = "com.settrade.openapi.protobuf.v1";
+
+// Topic: proto/ua/_broker/<account_no>/_front/orderdvv1
+//
+// Derivative order information
+message OrderDerivV1 {
+    // Order version. Greater version means more recent order
+    int32 version = 1;
+    // Settrade order no.
+    string order_no = 2;
+    // External order no. in case of using integrated account, otherwise blank
+    string ext_order_no = 3;
+    // Subscribed account no.
+    string account_no = 4;
+    // ID of Market Representative who placed this order
+    // Blank if investor place order by him or herself
+    string enter_id = 5;
+    // The time the order is submitted
+    google.protobuf.Timestamp entry_time = 6;
+    // Series ID or symbol
+    string series_id = 7;
+    // Side - Long, Short or both
+    LongShort side = 8;
+    // Position - Open, Close, Auto
+    Position position = 9;
+    // Order Price
+    google.type.Money price = 10;
+    // Order Price Type - Limit, ATO, ATC, Market (MP-MKT), Special Market (MP), Market to limit (MP-MTL)
+    PriceType price_type = 11;
+    // Order Volume
+    int64 volume = 12;
+    // Order Balance Volume
+    // Balance Volume = Order Volume - Matched Volume - Cancelled Volume
+    int64 balance_volume = 13;
+    // Order Matched Volume
+    int64 matched_volume = 14;
+    // Order Cancelled Volume
+    int64 cancelled_volume = 15;
+    // Validity of order - FOK, IOC, GTD, GTC, GTT, GTS, AUCTION, DAY, AUTO-M
+    Valid valid = 16;
+    // Additional information regarding date, time and session if order validity is GTD, GTT and GTS respectively
+    string until = 17;
+    // Order Status
+    string status = 18;
+    // True if available for cancel, false otherwise
+    bool can_cancel = 19;
+    // True if available for change nvdr, false otherwise
+    bool can_change = 20;
+    // True if available for change price/volume, false otherwise
+    bool can_change_price_vol = 21;
+    // True if this order is trade report
+    bool is_trade_report = 22;
+
+    enum PriceType {
+        UNDEFINED_PRICE_TYPE = 0;
+        LIMIT = 1;
+        ATO = 2;
+        ATC = 3;
+        MARKET = 4;
+        SPECIAL_MARKET = 5;
+        MARKET_TO_LIMIT = 6;
+    }
+
+    enum LongShort {
+        UNDEFINED_LONGSHORT = 0;
+        LONG = 1;
+        SHORT = 2;
+        LONG_AND_SHORT = 3;
+    }
+
+    enum Position {
+        UNDEFINED_POSITION = 0;
+        OPEN = 1;
+        CLOSE = 2;
+        AUTO = 3;
+    }
+
+    enum Valid {
+        UNDEFINED_VALID = 0;
+        FOK = 1;
+        IOC = 2;
+        GTD = 3;
+        GTC = 4;
+        GTT = 5;
+        GTS = 6;
+        AUCTION = 7;
+        DAY = 8;
+        AUTO_M = 9;
+    }
+}

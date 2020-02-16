@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package settrade.openapi.protobuf.v1;
+
+import "google/type/money.proto";
+import "google/protobuf/wrappers.proto";
+
+option java_multiple_files = true;
+option java_outer_classname = "BidOfferV1Proto";
+option java_package = "com.settrade.openapi.protobuf.v1";
+
+// Topic: proto/topic/bidofferv1/<symbol>
+//
+// Today's price and volume of top five bids/offers
+message BidOfferV1 {
+    // Subscribed symbol
+    string symbol = 1;
+    // 1st bid price
+    // Price equals to zero during ATO/ATC
+    google.type.Money bid_price1 = 2;
+    // 2nd bid price
+    google.type.Money bid_price2 = 3;
+    // 3rd bid price
+    google.type.Money bid_price3 = 4;
+    // 4th bid price
+    google.type.Money bid_price4 = 5;
+    // 5th bid price
+    google.type.Money bid_price5 = 6;
+    // 1st ask price
+    // Price equals to zero during ATO/ATC
+    google.type.Money ask_price1 = 7;
+    // 2nd ask price
+    google.type.Money ask_price2 = 8;
+    // 3rd ask price
+    google.type.Money ask_price3 = 9;
+    // 4th ask price
+    google.type.Money ask_price4 = 10;
+    // 5th ask price
+    google.type.Money ask_price5 = 11;
+    // 1st bid volume
+    int64 bid_volume1 = 12;
+    // 2nd bid volume
+    int64 bid_volume2 = 13;
+    // 3rd bid volume
+    int64 bid_volume3 = 14;
+    // 4th bid volume
+    int64 bid_volume4 = 15;
+    // 5th bid volume
+    int64 bid_volume5 = 16;
+    // 1st ask volume
+    int64 ask_volume1 = 17;
+    // 2nd ask volume
+    int64 ask_volume2 = 18;
+    // 3rd ask volume
+    int64 ask_volume3 = 19;
+    // 4th ask volume
+    int64 ask_volume4 = 20;
+    // 5th ask volume
+    int64 ask_volume5 = 21;
+}

@@ -57,9 +57,9 @@ public class OAuth3LeggedLogin {
 
       AccessToken3LeggedRequest tokenReq =
           AccessToken3LeggedRequest.builder()
-              .client_id(API_KEY)
+              .clientId(API_KEY)
               .code(authCode)
-              .redirect_uri(REDIRECT_URL)
+              .redirectUri(REDIRECT_URL)
               .build();
       Call<AccessTokenResponse> call =
           loginAPI.getAccessToken(

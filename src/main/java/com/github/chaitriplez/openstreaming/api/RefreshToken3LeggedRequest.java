@@ -10,14 +10,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccessToken3LeggedRequest {
-  @Builder.Default final String grant_type = "authorization_code";
+public class RefreshToken3LeggedRequest {
+  @JsonProperty("authenticated_userid")
+  String authenticatedUserid;
+
+  @JsonProperty("broker_id")
+  String brokerId;
 
   @JsonProperty("client_id")
   String clientId;
 
-  String code;
-
-  @JsonProperty("redirect_uri")
-  String redirectUri;
+  @JsonProperty("refresh_token")
+  String refreshToken;
 }

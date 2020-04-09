@@ -73,9 +73,9 @@ public class ThreeLeggedLoginConfig {
     }
     AccessToken3LeggedRequest tokenReq =
         AccessToken3LeggedRequest.builder()
-            .client_id(loginProp.getApiKey())
+            .clientId(loginProp.getApiKey())
             .code(code)
-            .redirect_uri(loginProp.getRedirectUrl())
+            .redirectUri(loginProp.getRedirectUrl())
             .build();
     Call<AccessTokenResponse> call =
         loginAPI.getAccessToken(

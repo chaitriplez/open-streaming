@@ -46,4 +46,14 @@ public interface Settrade3LeggedLoginAPI {
   Call<AccessTokenResponse> getAccessToken(
       @Header("Authorization") String authorization,
       @Body AccessToken3LeggedRequest accessTokenRequest);
+
+  /**
+   * @param authorization "Basic base64_encode(client_id:client_secret)"
+   * @param refreshTokenRequest
+   * @return
+   */
+  @POST("/api/oam/v1/oauth2/token?grant_type=refresh_token")
+  Call<AccessTokenResponse> getAccessTokenFromRefreshToken(
+      @Header("Authorization") String authorization,
+      @Body RefreshToken3LeggedRequest refreshTokenRequest);
 }

@@ -31,4 +31,12 @@ public class RetrofitProperties {
 
   @DurationUnit(ChronoUnit.SECONDS)
   private Duration upstreamOrderTimeout = Duration.ofSeconds(15);
+
+  private int upstreamPostLoginLimit = 5;
+
+  @DurationUnit(ChronoUnit.SECONDS)
+  private Duration upstreamPostLoginRefreshPeriod = Duration.ofSeconds(5);
+
+  @DurationUnit(ChronoUnit.SECONDS)
+  private Duration upstreamPostLoginTimeout = Duration.ofSeconds(15);
 }

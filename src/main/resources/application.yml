@@ -39,12 +39,17 @@ openstreaming:
     upstream-order-limit: 10
     upstream-order-refresh-period: 1s
     upstream-order-timeout: 15s
+    upstream-post-login-limit: 5
+    upstream-post-login-refresh-period: 5s
+    upstream-post-login-timeout: 15s
   pull-order:
     check-interval: 60s
-  mqtt:
-    stream-host: # https://stream.settrade.com/
+  push-manager:
     http-insecure: false
     keep-alive-interval: 20
+    auto-reconnect: true
+    reconnect-interval: 5
+    maximum-reconnect: 5
 
 logging:
   level:

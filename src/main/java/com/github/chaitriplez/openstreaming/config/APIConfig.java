@@ -7,6 +7,7 @@ import com.github.chaitriplez.openstreaming.api.SettradeDerivativesInvestorOrder
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesInvestorQueryAPI;
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepOrderAPI;
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepQueryAPI;
+import com.github.chaitriplez.openstreaming.api.SettradeStreamAPI;
 import com.github.chaitriplez.openstreaming.api.SettradeUserAPI;
 import com.github.chaitriplez.openstreaming.util.AuthorizationHeaderInterceptor;
 import com.github.chaitriplez.openstreaming.util.AuthorizationSupplier;
@@ -100,6 +101,18 @@ public class APIConfig {
   }
 
   @Bean
+  public RateLimiter postLoginRateLimiter() {
+    RateLimiterConfig config =
+        RateLimiterConfig.custom()
+            .limitRefreshPeriod(retrofitProp.getUpstreamPostLoginRefreshPeriod())
+            .limitForPeriod(retrofitProp.getUpstreamPostLoginLimit())
+            .timeoutDuration(retrofitProp.getUpstreamPostLoginTimeout())
+            .build();
+
+    return RateLimiterRegistry.of(config).rateLimiter("postLogin");
+  }
+
+  @Bean
   public RateLimiter queryRateLimiter() {
     RateLimiterConfig config =
         RateLimiterConfig.custom()
@@ -129,6 +142,19 @@ public class APIConfig {
         .baseUrl(osProp.getApiHost())
         .addConverterFactory(JacksonConverterFactory.create(mapper))
         .client(httpClientBuilder().build())
+        .build();
+  }
+
+  @Bean
+  public Retrofit postLoginRetrofit() {
+    return new Retrofit.Builder()
+        .baseUrl(osProp.getApiHost())
+        .addConverterFactory(JacksonConverterFactory.create(mapper))
+        .addCallAdapterFactory(RateLimiterCallAdapter.of(postLoginRateLimiter()))
+        .client(
+            httpClientBuilder()
+                .addInterceptor(new AuthorizationHeaderInterceptor(authorization()))
+                .build())
         .build();
   }
 
@@ -175,7 +201,12 @@ public class APIConfig {
 
   @Bean
   public SettradeUserAPI userAPI() {
-    return queryRetrofit().create(SettradeUserAPI.class);
+    return postLoginRetrofit().create(SettradeUserAPI.class);
+  }
+
+  @Bean
+  public SettradeStreamAPI streamAPI() {
+    return postLoginRetrofit().create(SettradeStreamAPI.class);
   }
 
   @ConditionalOnProperty(prefix = "openstreaming", name = "user-type", havingValue = "INVESTOR")

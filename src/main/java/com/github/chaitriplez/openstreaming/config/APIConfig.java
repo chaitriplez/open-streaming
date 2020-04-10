@@ -9,12 +9,12 @@ import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepOrderAP
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepQueryAPI;
 import com.github.chaitriplez.openstreaming.api.SettradeStreamAPI;
 import com.github.chaitriplez.openstreaming.api.SettradeUserAPI;
+import com.github.chaitriplez.openstreaming.util.AtomicRateLimiter;
 import com.github.chaitriplez.openstreaming.util.AuthorizationHeaderInterceptor;
 import com.github.chaitriplez.openstreaming.util.AuthorizationSupplier;
 import com.github.chaitriplez.openstreaming.util.HttpLogger;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
-import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import io.github.resilience4j.retrofit.RateLimiterCallAdapter;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -109,7 +109,7 @@ public class APIConfig {
             .timeoutDuration(retrofitProp.getUpstreamPostLoginTimeout())
             .build();
 
-    return RateLimiterRegistry.of(config).rateLimiter("postLogin");
+    return new AtomicRateLimiter("post-login", config);
   }
 
   @Bean
@@ -121,11 +121,11 @@ public class APIConfig {
             .timeoutDuration(retrofitProp.getUpstreamQueryTimeout())
             .build();
 
-    return RateLimiterRegistry.of(config).rateLimiter("query");
+    return new AtomicRateLimiter("query", config);
   }
 
   @Bean
-  public RateLimiter orderRateLimiter() {
+  public RateLimiter executionRateLimiter() {
     RateLimiterConfig config =
         RateLimiterConfig.custom()
             .limitRefreshPeriod(retrofitProp.getUpstreamOrderRefreshPeriod())
@@ -133,7 +133,7 @@ public class APIConfig {
             .timeoutDuration(retrofitProp.getUpstreamOrderTimeout())
             .build();
 
-    return RateLimiterRegistry.of(config).rateLimiter("order");
+    return new AtomicRateLimiter("execution", config);
   }
 
   @Bean
@@ -176,7 +176,7 @@ public class APIConfig {
     return new Retrofit.Builder()
         .baseUrl(osProp.getApiHost())
         .addConverterFactory(JacksonConverterFactory.create(mapper))
-        .addCallAdapterFactory(RateLimiterCallAdapter.of(orderRateLimiter()))
+        .addCallAdapterFactory(RateLimiterCallAdapter.of(executionRateLimiter()))
         .client(
             httpClientBuilder()
                 .addInterceptor(new AuthorizationHeaderInterceptor(authorization()))

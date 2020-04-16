@@ -34,8 +34,8 @@ $ docker run --rm -e SPRING_PROFILES_ACTIVE=investor -v ${PWD}/application-inves
 - [x] Cancel order by symbol
 - [x] Quote
 - [x] Order push
+- [x] Notification e.g. Line
 - [ ] Close all open position
 - [ ] Trailing stop order
 - [ ] Bracket order
 - [ ] Risk control: Position limit
-- [ ] Notification e.g. Facebook, Line

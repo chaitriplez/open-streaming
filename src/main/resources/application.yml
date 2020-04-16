@@ -50,6 +50,10 @@ openstreaming:
     auto-reconnect: true
     reconnect-interval: 5
     maximum-reconnect: 5
+  line:
+    enabled: false
+    user-id:
+    channel-access-token:
 
 logging:
   level:

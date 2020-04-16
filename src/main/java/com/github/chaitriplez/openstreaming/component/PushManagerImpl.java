@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import javax.annotation.PreDestroy;
+import javax.annotation.PostConstruct;
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -76,6 +76,14 @@ public class PushManagerImpl implements PushManager {
     } catch (Exception e) {
       log.warn("Cannot config insecure connection.", e);
       return null;
+    }
+  }
+
+  @PostConstruct
+  public void destroy() {
+    reconnectService.shutdownNow();
+    if (isConnect()) {
+      doStop();
     }
   }
 
@@ -200,13 +208,16 @@ public class PushManagerImpl implements PushManager {
     client.connect(conOpt);
   }
 
-  @PreDestroy
   @Override
   public synchronized void stop() {
     if (!isConnect()) {
       log.warn("SKIP: Client has already disconnected!");
       return;
     }
+    doStop();
+  }
+
+  private void doStop() {
     try {
       log.info("Disconnecting {}", client.getServerURI());
       client.disconnect();

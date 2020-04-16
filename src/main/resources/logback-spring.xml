@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <property name="PROJECT_NAME" value="openstreaming"/>
+  <springProperty scope="context" name="LINE_ENABLED" source="openstreaming.line.enabled"/>
+  <springProperty scope="context" name="LINE_USER_ID" source="openstreaming.line.user-id"/>
+  <springProperty scope="context" name="LINE_CHANNEL_ACCESS_TOKEN"
+    source="openstreaming.line.channel-access-token"/>
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d %-5level [%thread] %logger{0} %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>${log.dir:-./log}/${PROJECT_NAME}.log</File>
+    <encoder>
+      <pattern>%d %-5level [%thread] %logger{0} %msg%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${log.dir:-./log}/${PROJECT_NAME}.log.%d{yyyyMMdd}</fileNamePattern>
+      <maxHistory>15</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="CRITICAL_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>${log.dir:-./log}/critical_${PROJECT_NAME}.log</File>
+    <encoder>
+      <pattern>%d %-5level [%thread] %logger{0} %msg%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${log.dir:-./log}/critical_${PROJECT_NAME}.log.%d{yyyyMMdd}</fileNamePattern>
+      <maxHistory>15</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+    </rollingPolicy>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+  </appender>
+
+  <appender name="CRITICAL_LINE"
+    class="com.github.chaitriplez.openstreaming.util.LineNotificationAppender">
+    <enabled>${LINE_ENABLED}</enabled>
+    <userId>${LINE_USER_ID}</userId>
+    <channelAccessToken>${LINE_CHANNEL_ACCESS_TOKEN}</channelAccessToken>
+    <encoder>
+      <pattern>*** %-5level ***%n%msg</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+  </appender>
+
+  <appender name="LINE" class="com.github.chaitriplez.openstreaming.util.LineNotificationAppender">
+    <enabled>${LINE_ENABLED}</enabled>
+    <userId>${LINE_USER_ID}</userId>
+    <channelAccessToken>${LINE_CHANNEL_ACCESS_TOKEN}</channelAccessToken>
+    <encoder>
+      <pattern>%msg</pattern>
+    </encoder>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
+    <appender-ref ref="CRITICAL_FILE"/>
+    <appender-ref ref="CRITICAL_LINE"/>
+  </root>
+
+  <logger name="notification.line" additivity="false">
+    <appender-ref ref="LINE"/>
+  </logger>
+
+</configuration>

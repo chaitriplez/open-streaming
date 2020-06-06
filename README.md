@@ -11,12 +11,23 @@ $ sh gradlew bootRun
 $ gradle.bat bootRun
 ```
 
-- Build and run with docker
+- Build docker
 
 ```shell script
-$ docker build -t open-streaming .
-# Example
-$ docker run --rm -e SPRING_PROFILES_ACTIVE=investor -v ${PWD}/application-investor.yml:/opt/script/open-streaming/conf/application-investor.yml -p 8080:8080 open-streaming
+$ DOCKER_BUILDKIT=1 docker build -f docker/Dockerfile -t open-streaming:latest .
+```
+
+- Run docker
+
+```shell script
+# Start redis
+$ docker run --rm -d -p 6379:6379 redis:latest
+# Start server
+$ docker run --rm \
+  -e SPRING_PROFILES_ACTIVE=investor \
+  -e SPRING_REDIS_HOST=192.168.1.34 \
+  -v ${PWD}/local-conf/application-investor.yml:/opt/open-streaming/conf/application-investor.yml \
+  -p 8080:8080 open-streaming:latest
 ```
 
 ## Features
@@ -34,8 +45,8 @@ $ docker run --rm -e SPRING_PROFILES_ACTIVE=investor -v ${PWD}/application-inves
 - [x] Cancel order by symbol
 - [x] Quote
 - [x] Order push
-- [x] Support Line Notification
-- [ ] Support Timer
+- [x] Support line notification
+- [x] Support timer by cronicle
 - [ ] Close all open position
 - [ ] Trailing stop order
 - [ ] Bracket order

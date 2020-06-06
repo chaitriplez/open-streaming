@@ -1,23 +1,15 @@
+# syntax = docker/dockerfile:experimental
 FROM openjdk:8u232-jdk AS builder
 WORKDIR /usr/src/app/
-# Init gradle wrapper
-COPY gradlew ./
-COPY gradle ./gradle
-RUN sh gradlew build --no-daemon
-# Init dependencies
-COPY build.gradle settings.gradle ./
-RUN sh gradlew initialDependencies --no-daemon
-# Build project
 COPY . .
-RUN sh gradlew copyDependencies build --no-daemon
+RUN --mount=type=cache,target=/root/.gradle sh gradlew clean copyDependencies build
 
 
-FROM openjdk:8u232-jre-stretch
-
-ENV TZ=Asia/Bangkok \
-    MAIN_CLASS=com.github.chaitriplez.openstreaming.Application \
+FROM adoptopenjdk:8u252-b09-jre-openj9-0.20.0
+LABEL maintainer="chaitriplez@gmail.com"
+ENV MAIN_CLASS=com.github.chaitriplez.openstreaming.Application \
     PROCESS_NAME=OPEN_STREAMING \
-    PROGRAM_DIR=/opt/script/open-streaming \
+    PROGRAM_DIR=/opt/open-streaming \
     JAVA_XMS=128m \
     JAVA_XMX=512m
 
@@ -26,6 +18,8 @@ RUN mkdir -p ${PROGRAM_DIR}/bin \
     && mkdir -p ${PROGRAM_DIR}/conf \
     && mkdir -p ${PROGRAM_DIR}/classes
 
+EXPOSE 8080
+VOLUME ["${PROGRAM_DIR}/log"]
 WORKDIR ${PROGRAM_DIR}
 CMD ["./bin/start.sh"]
 

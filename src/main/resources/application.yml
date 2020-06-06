@@ -26,8 +26,8 @@ openstreaming:
     redirect-url: # http://localhost:8080/login
     scope: # place_order user
   ip-filter:
-    enabled: true
-    allow: '(127.0.0.1)|(0:0:0:0:0:0:0:1)' # pattern
+    enabled: false
+    allow: # pattern e.g. '(127.0.0.1)|(0:0:0:0:0:0:0:1)|(192.168.*)|(172.20.*)'
     deny: # pattern
     deny-status: 403 # Forbidden
   retrofit:

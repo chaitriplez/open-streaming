@@ -62,11 +62,3 @@ task copyDependencies(type: Copy) {
     include '*.jar'
     into "${buildDir}/dependencies"
 }
-
-task initialDependencies {
-    doLast {
-        for (file in configurations.testRuntimeClasspath) {
-            println "File: ${file.name} ${file.size() / 1000} kB"
-        }
-    }
-}

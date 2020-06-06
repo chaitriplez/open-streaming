@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 public class JobManagerImpl implements JobManager {
 
   private final AtomicLong jobIdGenerator = new AtomicLong();
-  private final AtomicLong jobDetailIdGenerator = new AtomicLong();
+  private final AtomicLong jobDetailIdGenerator = new AtomicLong(5000);
 
   @Autowired private JobRepository jobRepository;
 
@@ -99,6 +99,9 @@ public class JobManagerImpl implements JobManager {
     jobRepository.save(tuple.getFirst());
     jobDetailRepository.saveAll(tuple.getSecond());
     jobLatch.create(tuple.getFirst().getId(), tuple.getSecond().size());
+    if(tuple.getSecond().isEmpty()) {
+      releaseJob(tuple.getFirst().getId());
+    }
   }
 
   @Override

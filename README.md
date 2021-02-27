@@ -26,16 +26,15 @@ $ docker run --rm -d -p 6379:6379 redis:latest
 $ docker run --rm \
   -e SPRING_PROFILES_ACTIVE=investor \
   -e SPRING_REDIS_HOST=192.168.1.34 \
-  -v ${PWD}/local-conf/application-investor.yml:/opt/open-streaming/conf/application-investor.yml \
+  -v ${PWD}/local-conf/application-sandbox.yml:/opt/open-streaming/conf/application-sandbox.yml \
   -p 8080:8080 open-streaming:latest
 ```
 
 ## Features
 
 - [x] Login 2-Legged
-- [x] Login 3-Legged
-- [x] API proxy investor
-- [x] API proxy market representative
+- [x] API proxy investor derivatives
+- [ ] API proxy investor equity
 - [x] API rate limit
 - [x] API logging
   - [x] Access log
@@ -46,7 +45,7 @@ $ docker run --rm \
 - [x] Quote
 - [x] Order push
 - [x] Support line notification
-- [x] Support timer by cronicle
+- [ ] Support timer by cronicle
 - [ ] Close all open position
 - [ ] Trailing stop order
 - [ ] Bracket order

@@ -10,17 +10,5 @@ public class OpenStreamingProperties {
   private String username;
   private String accountNo;
   private String pin;
-  private UserType userType;
-  private LoginType loginType;
   private String apiHost;
-
-  public enum UserType {
-    INVESTOR,
-    MKT_REP
-  }
-
-  public enum LoginType {
-    TWO_LEGGED,
-    THREE_LEGGED
-  }
 }

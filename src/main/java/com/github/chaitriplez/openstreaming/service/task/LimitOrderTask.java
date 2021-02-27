@@ -1,16 +1,13 @@
 package com.github.chaitriplez.openstreaming.service.task;
 
 import com.github.chaitriplez.openstreaming.api.InvestorPlaceOrderRequest;
-import com.github.chaitriplez.openstreaming.api.PlaceOrderRequest;
 import com.github.chaitriplez.openstreaming.api.PlaceOrderResponse;
 import com.github.chaitriplez.openstreaming.api.PriceType;
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesInvestorOrderAPI;
-import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepOrderAPI;
 import com.github.chaitriplez.openstreaming.api.ValidityType;
 import com.github.chaitriplez.openstreaming.component.AbstractOrderExecution;
 import com.github.chaitriplez.openstreaming.component.OrderCacheManager;
 import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties;
-import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties.UserType;
 import com.github.chaitriplez.openstreaming.repository.OrderCache;
 import com.github.chaitriplez.openstreaming.service.LimitOrderRequest;
 import java.io.IOException;
@@ -48,38 +45,21 @@ public class LimitOrderTask extends AbstractOrderExecution<LimitOrderRequest> {
 
   private Call<PlaceOrderResponse> placeOrder() {
     OpenStreamingProperties osProp = context.getBean(OpenStreamingProperties.class);
-    if (osProp.getUserType() == UserType.INVESTOR) {
-      SettradeDerivativesInvestorOrderAPI api =
-          context.getBean(SettradeDerivativesInvestorOrderAPI.class);
-      InvestorPlaceOrderRequest place =
-          InvestorPlaceOrderRequest.builder()
-              .pin(osProp.getPin())
-              .position(request.getPosition())
-              .side(request.getSide())
-              .symbol(request.getSymbol())
-              .volume(request.getQty())
-              .priceType(PriceType.LIMIT)
-              .price(request.getPx())
-              .validityType(ValidityType.GOOD_TILL_DAY)
-              .bypassWarning(true)
-              .build();
-      return api.placeOrder(osProp.getBrokerId(), osProp.getAccountNo(), place);
-    } else {
-      SettradeDerivativesMktRepOrderAPI api =
-          context.getBean(SettradeDerivativesMktRepOrderAPI.class);
-      PlaceOrderRequest place =
-          PlaceOrderRequest.builder()
-              .position(request.getPosition())
-              .side(request.getSide())
-              .symbol(request.getSymbol())
-              .volume(request.getQty())
-              .priceType(PriceType.LIMIT)
-              .price(request.getPx())
-              .validityType(ValidityType.GOOD_TILL_DAY)
-              .bypassWarning(true)
-              .build();
-      return api.placeOrder(osProp.getBrokerId(), osProp.getAccountNo(), place);
-    }
+    SettradeDerivativesInvestorOrderAPI api =
+        context.getBean(SettradeDerivativesInvestorOrderAPI.class);
+    InvestorPlaceOrderRequest place =
+        InvestorPlaceOrderRequest.builder()
+            .pin(osProp.getPin())
+            .position(request.getPosition())
+            .side(request.getSide())
+            .symbol(request.getSymbol())
+            .volume(request.getQty())
+            .priceType(PriceType.LIMIT)
+            .price(request.getPx())
+            .validityType(ValidityType.GOOD_TILL_DAY)
+            .bypassWarning(true)
+            .build();
+    return api.placeOrder(osProp.getBrokerId(), osProp.getAccountNo(), place);
   }
 
   private void initOrderCache(Long orderNo) {

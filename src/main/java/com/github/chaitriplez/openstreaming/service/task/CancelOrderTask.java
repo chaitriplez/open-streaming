@@ -2,10 +2,8 @@ package com.github.chaitriplez.openstreaming.service.task;
 
 import com.github.chaitriplez.openstreaming.api.InvestorCancelOrderRequest;
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesInvestorOrderAPI;
-import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepOrderAPI;
 import com.github.chaitriplez.openstreaming.component.AbstractOrderExecution;
 import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties;
-import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties.UserType;
 import java.io.IOException;
 import java.time.Duration;
 import retrofit2.Call;
@@ -53,16 +51,10 @@ public class CancelOrderTask extends AbstractOrderExecution<Long> {
 
   private Call<Void> cancelOrder() {
     OpenStreamingProperties osProp = context.getBean(OpenStreamingProperties.class);
-    if (osProp.getUserType() == UserType.INVESTOR) {
-      SettradeDerivativesInvestorOrderAPI api =
-          context.getBean(SettradeDerivativesInvestorOrderAPI.class);
-      InvestorCancelOrderRequest cancel =
-          InvestorCancelOrderRequest.builder().pin(osProp.getPin()).build();
-      return api.cancelOrder(osProp.getBrokerId(), osProp.getAccountNo(), request, cancel);
-    } else {
-      SettradeDerivativesMktRepOrderAPI api =
-          context.getBean(SettradeDerivativesMktRepOrderAPI.class);
-      return api.cancelOrder(osProp.getBrokerId(), osProp.getAccountNo(), request);
-    }
+    SettradeDerivativesInvestorOrderAPI api =
+        context.getBean(SettradeDerivativesInvestorOrderAPI.class);
+    InvestorCancelOrderRequest cancel =
+        InvestorCancelOrderRequest.builder().pin(osProp.getPin()).build();
+    return api.cancelOrder(osProp.getBrokerId(), osProp.getAccountNo(), request, cancel);
   }
 }

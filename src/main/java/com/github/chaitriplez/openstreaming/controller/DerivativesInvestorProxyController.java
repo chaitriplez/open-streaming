@@ -16,7 +16,6 @@ import com.github.chaitriplez.openstreaming.util.ResponseEntityConverter;
 import java.util.List;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Setter
 @RestController
-@ConditionalOnProperty(prefix = "openstreaming", name = "user-type", havingValue = "INVESTOR")
 public class DerivativesInvestorProxyController {
 
   @Autowired private SettradeDerivativesInvestorQueryAPI queryApi;

@@ -2,11 +2,8 @@ package com.github.chaitriplez.openstreaming.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.chaitriplez.openstreaming.api.Settrade2LeggedLoginAPI;
-import com.github.chaitriplez.openstreaming.api.Settrade3LeggedLoginAPI;
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesInvestorOrderAPI;
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesInvestorQueryAPI;
-import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepOrderAPI;
-import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepQueryAPI;
 import com.github.chaitriplez.openstreaming.api.SettradeStreamAPI;
 import com.github.chaitriplez.openstreaming.api.SettradeUserAPI;
 import com.github.chaitriplez.openstreaming.util.AtomicRateLimiter;
@@ -29,7 +26,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import okhttp3.logging.HttpLoggingInterceptor.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -185,18 +181,8 @@ public class APIConfig {
   }
 
   @Bean
-  @ConditionalOnProperty(prefix = "openstreaming", name = "login-type", havingValue = "TWO_LEGGED")
   public Settrade2LeggedLoginAPI settrade2LeggedLoginAPI() {
     return preLoginRetrofit().create(Settrade2LeggedLoginAPI.class);
-  }
-
-  @Bean
-  @ConditionalOnProperty(
-      prefix = "openstreaming",
-      name = "login-type",
-      havingValue = "THREE_LEGGED")
-  public Settrade3LeggedLoginAPI settrade3LeggedLoginAPI() {
-    return preLoginRetrofit().create(Settrade3LeggedLoginAPI.class);
   }
 
   @Bean
@@ -209,29 +195,13 @@ public class APIConfig {
     return postLoginRetrofit().create(SettradeStreamAPI.class);
   }
 
-  @ConditionalOnProperty(prefix = "openstreaming", name = "user-type", havingValue = "INVESTOR")
-  public final class InvestorAPI {
-    @Bean
-    public SettradeDerivativesInvestorOrderAPI investorOrderAPI() {
-      return orderRetrofit().create(SettradeDerivativesInvestorOrderAPI.class);
-    }
-
-    @Bean
-    public SettradeDerivativesInvestorQueryAPI investorQueryAPI() {
-      return queryRetrofit().create(SettradeDerivativesInvestorQueryAPI.class);
-    }
+  @Bean
+  public SettradeDerivativesInvestorOrderAPI investorOrderAPI() {
+    return orderRetrofit().create(SettradeDerivativesInvestorOrderAPI.class);
   }
 
-  @ConditionalOnProperty(prefix = "openstreaming", name = "user-type", havingValue = "MKT_REP")
-  public final class MktRepAPI {
-    @Bean
-    public SettradeDerivativesMktRepOrderAPI mktRepOrderAPI() {
-      return orderRetrofit().create(SettradeDerivativesMktRepOrderAPI.class);
-    }
-
-    @Bean
-    public SettradeDerivativesMktRepQueryAPI mktRepQueryAPI() {
-      return queryRetrofit().create(SettradeDerivativesMktRepQueryAPI.class);
-    }
+  @Bean
+  public SettradeDerivativesInvestorQueryAPI investorQueryAPI() {
+    return queryRetrofit().create(SettradeDerivativesInvestorQueryAPI.class);
   }
 }

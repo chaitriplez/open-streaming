@@ -10,7 +10,6 @@ import java.util.Objects;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,6 @@ import retrofit2.Response;
 
 @Slf4j
 @Setter
-@ConditionalOnProperty(prefix = "openstreaming", name = "login-type", havingValue = "TWO_LEGGED")
 @EnableConfigurationProperties(TwoLeggedLoginProperties.class)
 @Configuration
 public class TwoLeggedLoginConfig {

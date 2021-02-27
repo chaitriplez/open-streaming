@@ -1,12 +1,9 @@
 package com.github.chaitriplez.openstreaming.service.task;
 
 import com.github.chaitriplez.openstreaming.api.InvestorChangeOrderRequest;
-import com.github.chaitriplez.openstreaming.api.MktRepChangeOrderRequest;
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesInvestorOrderAPI;
-import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepOrderAPI;
 import com.github.chaitriplez.openstreaming.component.AbstractOrderExecution;
 import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties;
-import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties.UserType;
 import com.github.chaitriplez.openstreaming.service.ChangePxQtyRequest;
 import java.io.IOException;
 import retrofit2.Call;
@@ -40,32 +37,17 @@ public class ChangePxQtyTask extends AbstractOrderExecution<ChangePxQtyRequest> 
 
   private Call<Void> changeOrder() {
     OpenStreamingProperties osProp = context.getBean(OpenStreamingProperties.class);
-    if (osProp.getUserType() == UserType.INVESTOR) {
-      SettradeDerivativesInvestorOrderAPI api =
-          context.getBean(SettradeDerivativesInvestorOrderAPI.class);
-      InvestorChangeOrderRequest.InvestorChangeOrderRequestBuilder builder =
-          InvestorChangeOrderRequest.builder().pin(osProp.getPin());
-      if (request.isChangePx()) {
-        builder.newPrice(request.getPx());
-      }
-      if (request.isChangeQty()) {
-        builder.newVolume(request.getQty());
-      }
-      return api.changeOrder(
-          osProp.getBrokerId(), osProp.getAccountNo(), request.getOrderNo(), builder.build());
-    } else {
-      SettradeDerivativesMktRepOrderAPI api =
-          context.getBean(SettradeDerivativesMktRepOrderAPI.class);
-      MktRepChangeOrderRequest.MktRepChangeOrderRequestBuilder builder =
-          MktRepChangeOrderRequest.builder();
-      if (request.isChangePx()) {
-        builder.newPrice(request.getPx());
-      }
-      if (request.isChangeQty()) {
-        builder.newVolume(request.getQty());
-      }
-      return api.changeOrder(
-          osProp.getBrokerId(), osProp.getAccountNo(), request.getOrderNo(), builder.build());
+    SettradeDerivativesInvestorOrderAPI api =
+        context.getBean(SettradeDerivativesInvestorOrderAPI.class);
+    InvestorChangeOrderRequest.InvestorChangeOrderRequestBuilder builder =
+        InvestorChangeOrderRequest.builder().pin(osProp.getPin());
+    if (request.isChangePx()) {
+      builder.newPrice(request.getPx());
     }
+    if (request.isChangeQty()) {
+      builder.newVolume(request.getQty());
+    }
+    return api.changeOrder(
+        osProp.getBrokerId(), osProp.getAccountNo(), request.getOrderNo(), builder.build());
   }
 }

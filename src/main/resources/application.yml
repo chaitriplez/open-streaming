@@ -12,19 +12,11 @@ openstreaming:
   username: # Validation
   account-no: # Validation
   pin: # Save Pin Number
-  user-type: # INVESTOR, MKT_REP
-  login-type: # TWO_LEGGED, THREE_LEGGED
   api-host: # https://open-api.settrade.com/
   two-legged:
     app-code: # ALGO
     api-key:
     api-secret:
-  three-legged:
-    login-host: # https://app.settrade.com/
-    api-key:
-    api-secret:
-    redirect-url: # http://localhost:8080/login
-    scope: # place_order user
   ip-filter:
     enabled: false
     allow: # pattern e.g. '(127.0.0.1)|(0:0:0:0:0:0:0:1)|(192.168.*)|(172.20.*)'

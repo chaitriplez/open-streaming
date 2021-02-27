@@ -2,9 +2,7 @@ package com.github.chaitriplez.openstreaming.component;
 
 import com.github.chaitriplez.openstreaming.api.OrderResponse;
 import com.github.chaitriplez.openstreaming.api.SettradeDerivativesInvestorQueryAPI;
-import com.github.chaitriplez.openstreaming.api.SettradeDerivativesMktRepQueryAPI;
 import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties;
-import com.github.chaitriplez.openstreaming.config.OpenStreamingProperties.UserType;
 import com.github.chaitriplez.openstreaming.controller.CallFailException;
 import com.github.chaitriplez.openstreaming.repository.OrderCache;
 import com.github.chaitriplez.openstreaming.repository.OrderCacheRepository;
@@ -34,11 +32,8 @@ public class OrderCacheManagerImpl implements OrderCacheManager {
 
   @Autowired private OrderCacheRepository orderCacheRepository;
 
-  @Autowired(required = false)
+  @Autowired
   private SettradeDerivativesInvestorQueryAPI investorQueryAPI;
-
-  @Autowired(required = false)
-  private SettradeDerivativesMktRepQueryAPI mktRepQueryAPI;
 
   @Override
   public void initial() {
@@ -98,10 +93,6 @@ public class OrderCacheManagerImpl implements OrderCacheManager {
   }
 
   private Call<List<OrderResponse>> listAllOrder() {
-    if (osProp.getUserType() == UserType.INVESTOR) {
-      return investorQueryAPI.listOrder(osProp.getBrokerId(), osProp.getAccountNo());
-    } else {
-      return mktRepQueryAPI.listOrder(osProp.getBrokerId(), osProp.getAccountNo());
-    }
+    return investorQueryAPI.listOrder(osProp.getBrokerId(), osProp.getAccountNo());
   }
 }

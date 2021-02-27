@@ -2,6 +2,7 @@ package com.github.chaitriplez.openstreaming.util;
 
 import com.github.chaitriplez.openstreaming.api.OrderResponse;
 import com.github.chaitriplez.openstreaming.repository.OrderCache;
+import com.google.type.Money;
 import com.settrade.openapi.protobuf.v1.OrderDerivV1;
 import java.math.BigDecimal;
 
@@ -33,7 +34,7 @@ public class OrderCacheConverter {
     cache.setAccount(o.getAccountNo());
     cache.setSide(o.getSide().toString());
     cache.setPosition(o.getPosition().toString());
-    cache.setPx(new BigDecimal(o.getPrice().getUnits()).movePointLeft(o.getPrice().getNanos()));
+    cache.setPx(convert(o.getPrice()));
     cache.setQty((int) o.getVolume());
     cache.setBalanceQty((int) o.getBalanceVolume());
     cache.setMatchQty((int) o.getMatchedVolume());
@@ -41,5 +42,12 @@ public class OrderCacheConverter {
     cache.setStatus(o.getStatus());
     cache.setVersion((long) o.getVersion());
     return cache;
+  }
+
+  private static BigDecimal convert(Money money) {
+    return BigDecimal.valueOf(money.getNanos())
+        .movePointLeft(9)
+        .add(BigDecimal.valueOf(money.getUnits()))
+        .stripTrailingZeros();
   }
 }

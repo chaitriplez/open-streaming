@@ -6,6 +6,7 @@ server:
 
 spring:
   jackson.serialization.WRITE_DATE_KEYS_AS_TIMESTAMPS: false
+  redis.host: localhost
 
 openstreaming:
   broker-id: # XXX

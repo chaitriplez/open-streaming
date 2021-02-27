@@ -14,6 +14,8 @@ option java_package = "com.settrade.openapi.protobuf.v1";
 message InfoV1 {
     // Subscribed symbol
     string symbol = 1;
+    // Projected open price, exists only during Pre-open session
+    google.type.Money projected_open_price = 6;
     // Highest price
     google.type.Money high = 2;
     // Lowest price

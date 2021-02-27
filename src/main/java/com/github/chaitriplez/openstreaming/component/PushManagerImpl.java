@@ -82,7 +82,7 @@ public class PushManagerImpl implements PushManager {
   @PostConstruct
   public void destroy() {
     reconnectService.shutdownNow();
-    if (isConnect()) {
+    if (isClientConnected()) {
       doStop();
     }
   }
@@ -92,13 +92,13 @@ public class PushManagerImpl implements PushManager {
     if (reconnecting) {
       throw new IllegalStateException("Reconnecting stream service.");
     }
-    if (isConnect()) {
+    if (isClientConnected()) {
       throw new IllegalStateException("Already connect stream service.");
     }
     doStart();
   }
 
-  private boolean isConnect() {
+  private boolean isClientConnected() {
     return client != null && client.isConnected();
   }
 
@@ -210,7 +210,7 @@ public class PushManagerImpl implements PushManager {
 
   @Override
   public synchronized void stop() {
-    if (!isConnect()) {
+    if (!isClientConnected()) {
       log.warn("SKIP: Client has already disconnected!");
       return;
     }
@@ -228,8 +228,13 @@ public class PushManagerImpl implements PushManager {
   }
 
   @Override
+  public synchronized boolean isConnected() {
+    return isClientConnected();
+  }
+
+  @Override
   public synchronized void subscribe(String topic, PushListener listener) throws MqttException {
-    if (!isConnect()) {
+    if (!isClientConnected()) {
       throw new IllegalStateException("Stream service was stopped.");
     }
     if (!subscribers.containsKey(topic)) {
@@ -248,7 +253,7 @@ public class PushManagerImpl implements PushManager {
 
   @Override
   public synchronized void unsubscribe(String topic, PushListener listener) throws Exception {
-    if (!isConnect()) {
+    if (!isClientConnected()) {
       throw new IllegalStateException("Stream service was stopped.");
     }
     if (subscribers.computeIfPresent(
@@ -269,7 +274,7 @@ public class PushManagerImpl implements PushManager {
 
   @Override
   public synchronized void unsubscribe(String topic) throws MqttException {
-    if (!isConnect()) {
+    if (!isClientConnected()) {
       throw new IllegalStateException("Stream service was stopped.");
     }
     log.debug("Remove all listener from topic[{}]");

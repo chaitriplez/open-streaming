@@ -29,6 +29,33 @@ public interface InfoV1OrBuilder extends
 
   /**
    * <pre>
+   * Projected open price, exists only during Pre-open session
+   * </pre>
+   *
+   * <code>.google.type.Money projected_open_price = 6;</code>
+   * @return Whether the projectedOpenPrice field is set.
+   */
+  boolean hasProjectedOpenPrice();
+  /**
+   * <pre>
+   * Projected open price, exists only during Pre-open session
+   * </pre>
+   *
+   * <code>.google.type.Money projected_open_price = 6;</code>
+   * @return The projectedOpenPrice.
+   */
+  com.google.type.Money getProjectedOpenPrice();
+  /**
+   * <pre>
+   * Projected open price, exists only during Pre-open session
+   * </pre>
+   *
+   * <code>.google.type.Money projected_open_price = 6;</code>
+   */
+  com.google.type.MoneyOrBuilder getProjectedOpenPriceOrBuilder();
+
+  /**
+   * <pre>
    * Highest price
    * </pre>
    *

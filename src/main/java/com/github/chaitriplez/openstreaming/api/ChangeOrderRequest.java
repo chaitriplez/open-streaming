@@ -11,8 +11,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChangeOrderRequest {
-  Position newPosition;
   BigDecimal newPrice;
   Integer newVolume;
-  PriceType newPriceType;
 }

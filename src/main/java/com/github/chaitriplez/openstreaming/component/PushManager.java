@@ -5,6 +5,8 @@ public interface PushManager {
 
   void stop() throws Exception;
 
+  boolean isConnected();
+
   void subscribe(String topic, PushListener listener) throws Exception;
 
   void unsubscribe(String topic, PushListener listener) throws Exception;

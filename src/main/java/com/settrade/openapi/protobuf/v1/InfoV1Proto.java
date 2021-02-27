@@ -29,12 +29,14 @@ public final class InfoV1Proto {
   static {
     java.lang.String[] descriptorData = {
       "\n\014infov1.proto\022\034settrade.openapi.protobu" +
-      "f.v1\032\027google/type/money.proto\"\223\001\n\006InfoV1" +
-      "\022\016\n\006symbol\030\001 \001(\t\022 \n\004high\030\002 \001(\0132\022.google." +
-      "type.Money\022\037\n\003low\030\003 \001(\0132\022.google.type.Mo" +
-      "ney\022 \n\004last\030\004 \001(\0132\022.google.type.Money\022\024\n" +
-      "\014total_volume\030\005 \001(\003B1\n com.settrade.open" +
-      "api.protobuf.v1B\013InfoV1ProtoP\001b\006proto3"
+      "f.v1\032\027google/type/money.proto\"\305\001\n\006InfoV1" +
+      "\022\016\n\006symbol\030\001 \001(\t\0220\n\024projected_open_price" +
+      "\030\006 \001(\0132\022.google.type.Money\022 \n\004high\030\002 \001(\013" +
+      "2\022.google.type.Money\022\037\n\003low\030\003 \001(\0132\022.goog" +
+      "le.type.Money\022 \n\004last\030\004 \001(\0132\022.google.typ" +
+      "e.Money\022\024\n\014total_volume\030\005 \001(\003B1\n com.set" +
+      "trade.openapi.protobuf.v1B\013InfoV1ProtoP\001" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -46,7 +48,7 @@ public final class InfoV1Proto {
     internal_static_settrade_openapi_protobuf_v1_InfoV1_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_settrade_openapi_protobuf_v1_InfoV1_descriptor,
-        new java.lang.String[] { "Symbol", "High", "Low", "Last", "TotalVolume", });
+        new java.lang.String[] { "Symbol", "ProjectedOpenPrice", "High", "Low", "Last", "TotalVolume", });
     com.google.type.MoneyProto.getDescriptor();
   }
 

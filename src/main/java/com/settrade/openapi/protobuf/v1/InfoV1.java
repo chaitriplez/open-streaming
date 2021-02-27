@@ -104,6 +104,19 @@ private static final long serialVersionUID = 0L;
             totalVolume_ = input.readInt64();
             break;
           }
+          case 50: {
+            com.google.type.Money.Builder subBuilder = null;
+            if (projectedOpenPrice_ != null) {
+              subBuilder = projectedOpenPrice_.toBuilder();
+            }
+            projectedOpenPrice_ = input.readMessage(com.google.type.Money.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(projectedOpenPrice_);
+              projectedOpenPrice_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -178,6 +191,41 @@ private static final long serialVersionUID = 0L;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
+  }
+
+  public static final int PROJECTED_OPEN_PRICE_FIELD_NUMBER = 6;
+  private com.google.type.Money projectedOpenPrice_;
+  /**
+   * <pre>
+   * Projected open price, exists only during Pre-open session
+   * </pre>
+   *
+   * <code>.google.type.Money projected_open_price = 6;</code>
+   * @return Whether the projectedOpenPrice field is set.
+   */
+  public boolean hasProjectedOpenPrice() {
+    return projectedOpenPrice_ != null;
+  }
+  /**
+   * <pre>
+   * Projected open price, exists only during Pre-open session
+   * </pre>
+   *
+   * <code>.google.type.Money projected_open_price = 6;</code>
+   * @return The projectedOpenPrice.
+   */
+  public com.google.type.Money getProjectedOpenPrice() {
+    return projectedOpenPrice_ == null ? com.google.type.Money.getDefaultInstance() : projectedOpenPrice_;
+  }
+  /**
+   * <pre>
+   * Projected open price, exists only during Pre-open session
+   * </pre>
+   *
+   * <code>.google.type.Money projected_open_price = 6;</code>
+   */
+  public com.google.type.MoneyOrBuilder getProjectedOpenPriceOrBuilder() {
+    return getProjectedOpenPrice();
   }
 
   public static final int HIGH_FIELD_NUMBER = 2;
@@ -328,6 +376,9 @@ private static final long serialVersionUID = 0L;
     if (totalVolume_ != 0L) {
       output.writeInt64(5, totalVolume_);
     }
+    if (projectedOpenPrice_ != null) {
+      output.writeMessage(6, getProjectedOpenPrice());
+    }
     unknownFields.writeTo(output);
   }
 
@@ -356,6 +407,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(5, totalVolume_);
     }
+    if (projectedOpenPrice_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(6, getProjectedOpenPrice());
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -373,6 +428,11 @@ private static final long serialVersionUID = 0L;
 
     if (!getSymbol()
         .equals(other.getSymbol())) return false;
+    if (hasProjectedOpenPrice() != other.hasProjectedOpenPrice()) return false;
+    if (hasProjectedOpenPrice()) {
+      if (!getProjectedOpenPrice()
+          .equals(other.getProjectedOpenPrice())) return false;
+    }
     if (hasHigh() != other.hasHigh()) return false;
     if (hasHigh()) {
       if (!getHigh()
@@ -403,6 +463,10 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + SYMBOL_FIELD_NUMBER;
     hash = (53 * hash) + getSymbol().hashCode();
+    if (hasProjectedOpenPrice()) {
+      hash = (37 * hash) + PROJECTED_OPEN_PRICE_FIELD_NUMBER;
+      hash = (53 * hash) + getProjectedOpenPrice().hashCode();
+    }
     if (hasHigh()) {
       hash = (37 * hash) + HIGH_FIELD_NUMBER;
       hash = (53 * hash) + getHigh().hashCode();
@@ -558,6 +622,12 @@ private static final long serialVersionUID = 0L;
       super.clear();
       symbol_ = "";
 
+      if (projectedOpenPriceBuilder_ == null) {
+        projectedOpenPrice_ = null;
+      } else {
+        projectedOpenPrice_ = null;
+        projectedOpenPriceBuilder_ = null;
+      }
       if (highBuilder_ == null) {
         high_ = null;
       } else {
@@ -605,6 +675,11 @@ private static final long serialVersionUID = 0L;
     public com.settrade.openapi.protobuf.v1.InfoV1 buildPartial() {
       com.settrade.openapi.protobuf.v1.InfoV1 result = new com.settrade.openapi.protobuf.v1.InfoV1(this);
       result.symbol_ = symbol_;
+      if (projectedOpenPriceBuilder_ == null) {
+        result.projectedOpenPrice_ = projectedOpenPrice_;
+      } else {
+        result.projectedOpenPrice_ = projectedOpenPriceBuilder_.build();
+      }
       if (highBuilder_ == null) {
         result.high_ = high_;
       } else {
@@ -672,6 +747,9 @@ private static final long serialVersionUID = 0L;
       if (!other.getSymbol().isEmpty()) {
         symbol_ = other.symbol_;
         onChanged();
+      }
+      if (other.hasProjectedOpenPrice()) {
+        mergeProjectedOpenPrice(other.getProjectedOpenPrice());
       }
       if (other.hasHigh()) {
         mergeHigh(other.getHigh());
@@ -808,6 +886,161 @@ private static final long serialVersionUID = 0L;
       symbol_ = value;
       onChanged();
       return this;
+    }
+
+    private com.google.type.Money projectedOpenPrice_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.type.Money, com.google.type.Money.Builder, com.google.type.MoneyOrBuilder> projectedOpenPriceBuilder_;
+    /**
+     * <pre>
+     * Projected open price, exists only during Pre-open session
+     * </pre>
+     *
+     * <code>.google.type.Money projected_open_price = 6;</code>
+     * @return Whether the projectedOpenPrice field is set.
+     */
+    public boolean hasProjectedOpenPrice() {
+      return projectedOpenPriceBuilder_ != null || projectedOpenPrice_ != null;
+    }
+    /**
+     * <pre>
+     * Projected open price, exists only during Pre-open session
+     * </pre>
+     *
+     * <code>.google.type.Money projected_open_price = 6;</code>
+     * @return The projectedOpenPrice.
+     */
+    public com.google.type.Money getProjectedOpenPrice() {
+      if (projectedOpenPriceBuilder_ == null) {
+        return projectedOpenPrice_ == null ? com.google.type.Money.getDefaultInstance() : projectedOpenPrice_;
+      } else {
+        return projectedOpenPriceBuilder_.getMessage();
+      }
+    }
+    /**
+     * <pre>
+     * Projected open price, exists only during Pre-open session
+     * </pre>
+     *
+     * <code>.google.type.Money projected_open_price = 6;</code>
+     */
+    public Builder setProjectedOpenPrice(com.google.type.Money value) {
+      if (projectedOpenPriceBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        projectedOpenPrice_ = value;
+        onChanged();
+      } else {
+        projectedOpenPriceBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * Projected open price, exists only during Pre-open session
+     * </pre>
+     *
+     * <code>.google.type.Money projected_open_price = 6;</code>
+     */
+    public Builder setProjectedOpenPrice(
+        com.google.type.Money.Builder builderForValue) {
+      if (projectedOpenPriceBuilder_ == null) {
+        projectedOpenPrice_ = builderForValue.build();
+        onChanged();
+      } else {
+        projectedOpenPriceBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * Projected open price, exists only during Pre-open session
+     * </pre>
+     *
+     * <code>.google.type.Money projected_open_price = 6;</code>
+     */
+    public Builder mergeProjectedOpenPrice(com.google.type.Money value) {
+      if (projectedOpenPriceBuilder_ == null) {
+        if (projectedOpenPrice_ != null) {
+          projectedOpenPrice_ =
+            com.google.type.Money.newBuilder(projectedOpenPrice_).mergeFrom(value).buildPartial();
+        } else {
+          projectedOpenPrice_ = value;
+        }
+        onChanged();
+      } else {
+        projectedOpenPriceBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * Projected open price, exists only during Pre-open session
+     * </pre>
+     *
+     * <code>.google.type.Money projected_open_price = 6;</code>
+     */
+    public Builder clearProjectedOpenPrice() {
+      if (projectedOpenPriceBuilder_ == null) {
+        projectedOpenPrice_ = null;
+        onChanged();
+      } else {
+        projectedOpenPrice_ = null;
+        projectedOpenPriceBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * Projected open price, exists only during Pre-open session
+     * </pre>
+     *
+     * <code>.google.type.Money projected_open_price = 6;</code>
+     */
+    public com.google.type.Money.Builder getProjectedOpenPriceBuilder() {
+      
+      onChanged();
+      return getProjectedOpenPriceFieldBuilder().getBuilder();
+    }
+    /**
+     * <pre>
+     * Projected open price, exists only during Pre-open session
+     * </pre>
+     *
+     * <code>.google.type.Money projected_open_price = 6;</code>
+     */
+    public com.google.type.MoneyOrBuilder getProjectedOpenPriceOrBuilder() {
+      if (projectedOpenPriceBuilder_ != null) {
+        return projectedOpenPriceBuilder_.getMessageOrBuilder();
+      } else {
+        return projectedOpenPrice_ == null ?
+            com.google.type.Money.getDefaultInstance() : projectedOpenPrice_;
+      }
+    }
+    /**
+     * <pre>
+     * Projected open price, exists only during Pre-open session
+     * </pre>
+     *
+     * <code>.google.type.Money projected_open_price = 6;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.type.Money, com.google.type.Money.Builder, com.google.type.MoneyOrBuilder> 
+        getProjectedOpenPriceFieldBuilder() {
+      if (projectedOpenPriceBuilder_ == null) {
+        projectedOpenPriceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.type.Money, com.google.type.Money.Builder, com.google.type.MoneyOrBuilder>(
+                getProjectedOpenPrice(),
+                getParentForChildren(),
+                isClean());
+        projectedOpenPrice_ = null;
+      }
+      return projectedOpenPriceBuilder_;
     }
 
     private com.google.type.Money high_;

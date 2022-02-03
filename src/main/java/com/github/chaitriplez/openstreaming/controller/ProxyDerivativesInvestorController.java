@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Setter
 @RestController
-public class DerivativesInvestorProxyController {
+public class ProxyDerivativesInvestorController {
 
   @Autowired private SettradeDerivativesInvestorQueryAPI queryApi;
   @Autowired private SettradeDerivativesInvestorOrderAPI orderApi;

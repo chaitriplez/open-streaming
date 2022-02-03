@@ -1,0 +1,4 @@
+FROM nicholasamorim/cronicle:0.8.45
+USER root
+RUN apk add --no-cache jq heirloom-mailx
+USER cronicle

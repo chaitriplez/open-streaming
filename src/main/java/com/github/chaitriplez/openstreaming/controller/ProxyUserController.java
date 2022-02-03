@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Setter
 @RestController
-public class UserProxyController {
+public class ProxyUserController {
 
   @Autowired private SettradeUserAPI api;
 

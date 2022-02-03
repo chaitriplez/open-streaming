@@ -26,6 +26,9 @@ public class LineNotificationController {
     notification.info("{}", message);
   }
 
+  /**
+   * Slack compatible endpoint
+   */
   @PostMapping("/api-os/line/v1/slack")
   public ResponseEntity sendNotification(@RequestBody JsonNode text) {
     notification.info("{}", text.get("text"));

@@ -1,0 +1,70 @@
+version: '3'
+
+services:
+  open-streaming:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - ./local-conf:/opt/open-streaming/conf
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+    environment:
+      - TZ=Asia/Bangkok
+      - SPRING_PROFILES_ACTIVE=investor
+      - SPRING_REDIS_HOST=redis
+    networks:
+      default:
+        ipv4_address: "192.168.123.10"
+
+  redis:
+    image: redis:5.0.9
+    environment:
+      - TZ=Asia/Bangkok
+    networks:
+      default:
+        ipv4_address: "192.168.123.11"
+
+  smtp:
+    image: namshi/smtp:latest
+    environment:
+      - TZ=Asia/Bangkok
+      - GMAIL_USER=chaitriplez@gmail.com
+      - GMAIL_PASSWORD=fyersrxfeutmzzeo
+    networks:
+      default:
+        ipv4_address: "192.168.123.12"
+
+  redis-commander:
+    image: rediscommander/redis-commander:read-only-mode
+    restart: always
+    environment:
+      - TZ=Asia/Bangkok
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    networks:
+      default:
+        ipv4_address: "192.168.123.13"
+
+  cronicle:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-cronicle
+    ports:
+      - "8082:3012"
+    environment:
+      - TZ=Asia/Bangkok
+      - CRONICLE_smtp_hostname=smtp
+    networks:
+      default:
+        ipv4_address: "192.168.123.14"
+
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.123.0/24"
